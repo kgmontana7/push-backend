@@ -127,6 +127,8 @@ setInterval(async () => {
 app.post('/register-device', (req, res) => {
   const { token, quit_date_time } = req.body;
 
+  console.log('📱 REGISTER TOKEN:', token);
+  
   if (!token || !quit_date_time) {
     return res.status(400).send({ error: 'missing data' });
   }
