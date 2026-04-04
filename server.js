@@ -139,6 +139,7 @@ setInterval(async () => {
         console.log('🚀 AUTO PUSH:', a.title);
 
         device.sent.push(a.id);
+        device.sent = [];
       } catch (e) {
         console.error('❌ AUTO PUSH ERROR:', e);
       }
