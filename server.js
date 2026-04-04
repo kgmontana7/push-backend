@@ -147,7 +147,7 @@ const message = {
       }
     }
   }
-}, 60000); // elke minuut
+}, 15000); // elke 15 seconden
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
