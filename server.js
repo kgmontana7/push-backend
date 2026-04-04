@@ -128,20 +128,19 @@ app.post('/register-device', (req, res) => {
   const { token, quit_date_time } = req.body;
 
   console.log('📱 REGISTER TOKEN:', token);
-  
+
   if (!token || !quit_date_time) {
     return res.status(400).send({ error: 'missing data' });
   }
 
-  const exists = devices.find((d) => d.token === token);
+  // 🔥 altijd nieuwste token gebruiken
+devices.length = 0;
 
-  if (!exists) {
-    devices.push({
-      token,
-      quit_date_time,
-      sent: [],
-    });
-  }
+devices.push({
+  token,
+  quit_date_time,
+  sent: [],
+});
 
   console.log('📱 DEVICES:', devices.length);
 
