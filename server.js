@@ -90,6 +90,51 @@ app.get('/', (req, res) => {
   res.send('Push backend running 🔥');
 });
 
+setInterval(async () => {
+  console.log('⏱️ RUNNING BACKGROUND CHECK');
+
+  const now = new Date();
+
+  const achievements = [
+    { id: '1_day', requirement: 1, title: '1 day clean' },
+    { id: '3_days', requirement: 3, title: '3 days clean' },
+    { id: '7_days', requirement: 7, title: '1 week clean' },
+  ];
+
+  for (const device of devices) {
+    const quitDate = new Date(device.quit_date_time);
+    const diff = now - quitDate;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    const unlocked = achievements.filter((a) => days >= a.requirement);
+
+    for (const a of unlocked) {
+      // al gestuurd?
+      if (device.sent.includes(a.id)) continue;
+
+      const message = {
+        token: device.token,
+        notification: {
+          title: 'Achievement unlocked 🏆',
+          body: a.title,
+        },
+        android: {
+          priority: 'high',
+        },
+      };
+
+      try {
+        await admin.messaging().send(message);
+        console.log('🚀 AUTO PUSH:', a.title);
+
+        device.sent.push(a.id);
+      } catch (e) {
+        console.error('❌ AUTO PUSH ERROR:', e);
+      }
+    }
+  }
+}, 60000); // elke minuut
+
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
