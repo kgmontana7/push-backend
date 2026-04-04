@@ -158,13 +158,18 @@ app.post('/register-device', async (req, res) => {
   }
 
   // 🔥 altijd nieuwste token gebruiken
-  devices.length = 0;
+const existing = devices.find(d => d.token === token);
 
+if (!existing) {
   devices.push({
     token,
     quit_date_time,
     sent: [],
   });
+} else {
+  // 🔥 update alleen datum, NIET sent resetten
+  existing.quit_date_time = quit_date_time;
+}
 
 // 🔥 TEST PUSH DIRECT NA REGISTRATIE
 try {
