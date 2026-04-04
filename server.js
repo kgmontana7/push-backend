@@ -64,7 +64,7 @@ app.post('/check-achievements', async (req, res) => {
 
     for (const a of unlocked) {
 const message = {
-  token: device.token,
+  token: token,
 
   notification: {
     title: 'Achievement unlocked 🏆',
