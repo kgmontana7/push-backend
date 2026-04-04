@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import admin from 'firebase-admin';
-import fs from 'fs';
 
 const app = express();
 
@@ -16,8 +15,35 @@ admin.initializeApp({
 });
 
 // 🔥 SEND PUSH
+app.post('/send-achievement', async (req, res) => {
+  const { token, title, body } = req.body;
 
-    app.post('/check-achievements', async (req, res) => {
+  try {
+    const message = {
+      token,
+      notification: {
+        title,
+        body,
+      },
+      android: {
+        priority: 'high',
+        notification: {
+          channelId: 'default',
+        },
+      },
+    };
+
+    const response = await admin.messaging().send(message);
+
+    res.send({ success: true, response });
+  } catch (e) {
+    console.error('❌ FIREBASE ERROR:', e);
+    res.status(500).send({ error: e.message });
+  }
+});
+
+// 🔥 CHECK ACHIEVEMENTS
+app.post('/check-achievements', async (req, res) => {
   const { token, stats } = req.body;
 
   if (!token || !stats) {
@@ -25,17 +51,13 @@ admin.initializeApp({
   }
 
   try {
-    // 🔥 simpele achievements (later uitbreiden)
     const achievements = [
-      { id: '1_day', type: 'days', requirement: 1, title: '1 day clean' },
-      { id: '3_days', type: 'days', requirement: 3, title: '3 days clean' },
-      { id: '7_days', type: 'days', requirement: 7, title: '1 week clean' },
+      { id: '1_day', requirement: 1, title: '1 day clean' },
+      { id: '3_days', requirement: 3, title: '3 days clean' },
+      { id: '7_days', requirement: 7, title: '1 week clean' },
     ];
 
-    const unlocked = achievements.filter((a) => {
-      if (a.type === 'days') return stats.days >= a.requirement;
-      return false;
-    });
+    const unlocked = achievements.filter((a) => stats.days >= a.requirement);
 
     for (const a of unlocked) {
       const message = {
@@ -58,29 +80,6 @@ admin.initializeApp({
     res.send({ success: true, count: unlocked.length });
   } catch (e) {
     console.error('❌ CHECK ERROR:', e);
-    res.status(500).send({ error: e.message });
-  }
-});
-
-const message = {
-  token,
-  notification: {
-    title,
-    body,
-  },
-  android: {
-    priority: 'high',
-    notification: {
-      channelId: 'default',
-    },
-  },
-};
-
-    const response = await admin.messaging().send(message);
-
-    res.send({ success: true, response });
-  } catch (e) {
-    console.error('❌ FIREBASE ERROR:', e);
     res.status(500).send({ error: e.message });
   }
 });
