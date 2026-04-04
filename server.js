@@ -94,31 +94,55 @@ app.post('/check-achievements', async (req, res) => {
   }
 });
 
-// 🔥 BACKGROUND TEST PUSH (FORCE)
+// 🔥 BACKGROUND CHECK (werkt als app dicht is)
 setInterval(async () => {
   console.log('⏱️ RUNNING BACKGROUND CHECK');
 
-  for (const device of devices) {
-    const message = {
-      token: device.token,
-      notification: {
-        title: '🔥 TEST PUSH',
-        body: 'ALS JE DIT ZIET WERKT HET',
-      },
-      android: {
-        priority: 'high',
-        notification: {
-          channelId: 'default',
-          sound: 'default',
-        },
-      },
-    };
+  const now = new Date();
 
-    try {
-      await admin.messaging().send(message);
-      console.log('🚀 TEST PUSH SENT');
-    } catch (e) {
-      console.error('❌ TEST PUSH ERROR:', e);
+  for (const device of devices) {
+    const quitDate = new Date(device.quit_date_time);
+    const diff = now - quitDate;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    const achievements = [
+      { id: '1_day', requirement: 1, title: '1 day clean' },
+      { id: '3_days', requirement: 3, title: '3 days clean' },
+      { id: '7_days', requirement: 7, title: '1 week clean' },
+    ];
+
+    const unlocked = achievements.filter(a => days >= a.requirement);
+
+    for (const a of unlocked) {
+      // 🔥 voorkom dubbele pushes
+      if (device.sent.includes(a.id)) continue;
+
+      const message = {
+        token: device.token,
+        notification: {
+          title: 'Achievement unlocked 🏆',
+          body: a.title,
+        },
+        data: {
+          achievementId: a.id,
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'default',
+            sound: 'default',
+          },
+        },
+      };
+
+      try {
+        await admin.messaging().send(message);
+        console.log('🚀 AUTO PUSH:', a.title);
+
+        device.sent.push(a.id);
+      } catch (e) {
+        console.error('❌ AUTO PUSH ERROR:', e);
+      }
     }
   }
 }, 15000); // elke 15 sec
@@ -134,13 +158,13 @@ app.post('/register-device', (req, res) => {
   }
 
   // 🔥 altijd nieuwste token gebruiken
-devices.length = 0;
+  devices.length = 0;
 
-devices.push({
-  token,
-  quit_date_time,
-  sent: [],
-});
+  devices.push({
+    token,
+    quit_date_time,
+    sent: [],
+  });
 
   console.log('📱 DEVICES:', devices.length);
 
