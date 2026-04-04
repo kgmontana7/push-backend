@@ -106,7 +106,7 @@ setInterval(async () => {
     const diff = now - quitDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    const unlocked = achievements.filter((a) => days >= a.requirement);
+  const unlocked = achievements;
 
     for (const a of unlocked) {
     
