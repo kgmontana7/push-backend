@@ -111,16 +111,15 @@ const unlocked = achievements.filter((a) => days >= a.requirement);
     for (const a of unlocked) {
       if (device.sent.includes(a.id)) continue;
     
-      const message = {
-        token: device.token,
-        notification: {
-          title: 'Achievement unlocked 🏆',
-          body: a.title,
-        },
-        android: {
-          priority: 'high',
-        },
-      };
+const message = {
+  token: device.token,
+  data: {
+    achievementId: a.id,
+  },
+  android: {
+    priority: 'high',
+  },
+};
 
       try {
         await admin.messaging().send(message);
