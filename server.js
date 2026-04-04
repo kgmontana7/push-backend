@@ -20,13 +20,20 @@ app.post('/send-achievement', async (req, res) => {
   const { token, title, body } = req.body;
 
   try {
-    const message = {
-      token,
-      notification: {
-        title,
-        body,
-      },
-    };
+    
+const message = {
+  token,
+  notification: {
+    title,
+    body,
+  },
+  android: {
+    priority: 'high',
+    notification: {
+      channelId: 'default',
+    },
+  },
+};
 
     const response = await admin.messaging().send(message);
 
