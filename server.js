@@ -106,9 +106,10 @@ setInterval(async () => {
     const diff = now - quitDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-  const unlocked = achievements;
+const unlocked = achievements.filter((a) => days >= a.requirement);
 
     for (const a of unlocked) {
+      if (device.sent.includes(a.id)) continue;
     
       const message = {
         token: device.token,
