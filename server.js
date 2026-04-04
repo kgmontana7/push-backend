@@ -60,19 +60,16 @@ app.post('/check-achievements', async (req, res) => {
     const unlocked = achievements.filter((a) => stats.days >= a.requirement);
 
     for (const a of unlocked) {
-      const message = {
-        token,
-        notification: {
-          title: 'Achievement unlocked 🏆',
-          body: a.title,
-        },
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'default',
-          },
-        },
-      };
+const message = {
+  token,
+  notification: {
+    title,
+    body,
+  },
+  android: {
+    priority: 'high',
+  },
+};
 
       await admin.messaging().send(message);
     }
