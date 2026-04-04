@@ -72,7 +72,8 @@ const message = {
   },
 };
 
-      await admin.messaging().send(message);
+     const response = await admin.messaging().send(message);
+console.log('✅ PUSH SENT:', response);
     }
 
     res.send({ success: true, count: unlocked.length });
