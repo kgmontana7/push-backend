@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import admin from 'firebase-admin';
 
+const devices = [];
+
 const app = express();
 
 app.use(cors());
@@ -90,4 +92,27 @@ app.get('/', (req, res) => {
 
 app.listen(3000, () => {
   console.log('Server running on port 3000');
+});
+
+app.post('/register-device', (req, res) => {
+  const { token, quit_date_time } = req.body;
+
+  if (!token || !quit_date_time) {
+    return res.status(400).send({ error: 'missing data' });
+  }
+
+  // check of al bestaat
+  const exists = devices.find((d) => d.token === token);
+
+  if (!exists) {
+    devices.push({
+      token,
+      quit_date_time,
+      sent: [], // opgeslagen achievements
+    });
+  }
+
+  console.log('📱 DEVICES:', devices.length);
+
+  res.send({ success: true });
 });
