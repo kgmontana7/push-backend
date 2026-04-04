@@ -44,6 +44,7 @@ app.post('/send-achievement', async (req, res) => {
 
 // 🔥 CHECK ACHIEVEMENTS
 app.post('/check-achievements', async (req, res) => {
+  console.log('🔥 CHECK CALLED:', req.body);
   const { token, stats } = req.body;
 
   if (!token || !stats) {
