@@ -148,7 +148,7 @@ setInterval(async () => {
 }, 15000); // elke 15 sec
 
 // 🔥 REGISTER DEVICE
-app.post('/register-device', (req, res) => {
+app.post('/register-device', async (req, res) => {
   const { token, quit_date_time } = req.body;
 
   console.log('📱 REGISTER TOKEN:', token);
@@ -165,6 +165,28 @@ app.post('/register-device', (req, res) => {
     quit_date_time,
     sent: [],
   });
+
+// 🔥 TEST PUSH DIRECT NA REGISTRATIE
+try {
+  await admin.messaging().send({
+    token,
+    notification: {
+      title: '🔥 TEST NA REGISTER',
+      body: 'ALS JE DIT ZIET WERKT BACKEND DIRECT',
+    },
+    android: {
+      priority: 'high',
+      notification: {
+        channelId: 'default',
+        sound: 'default',
+      },
+    },
+  });
+
+  console.log('🚀 DIRECT PUSH NA REGISTER');
+} catch (e) {
+  console.error('❌ DIRECT PUSH ERROR:', e);
+}
 
   console.log('📱 DEVICES:', devices.length);
 
