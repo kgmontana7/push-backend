@@ -16,11 +16,52 @@ admin.initializeApp({
 });
 
 // 🔥 SEND PUSH
-app.post('/send-achievement', async (req, res) => {
-  const { token, title, body } = req.body;
+
+    app.post('/check-achievements', async (req, res) => {
+  const { token, stats } = req.body;
+
+  if (!token || !stats) {
+    return res.status(400).send({ error: 'missing data' });
+  }
 
   try {
-    
+    // 🔥 simpele achievements (later uitbreiden)
+    const achievements = [
+      { id: '1_day', type: 'days', requirement: 1, title: '1 day clean' },
+      { id: '3_days', type: 'days', requirement: 3, title: '3 days clean' },
+      { id: '7_days', type: 'days', requirement: 7, title: '1 week clean' },
+    ];
+
+    const unlocked = achievements.filter((a) => {
+      if (a.type === 'days') return stats.days >= a.requirement;
+      return false;
+    });
+
+    for (const a of unlocked) {
+      const message = {
+        token,
+        notification: {
+          title: 'Achievement unlocked 🏆',
+          body: a.title,
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'default',
+          },
+        },
+      };
+
+      await admin.messaging().send(message);
+    }
+
+    res.send({ success: true, count: unlocked.length });
+  } catch (e) {
+    console.error('❌ CHECK ERROR:', e);
+    res.status(500).send({ error: e.message });
+  }
+});
+
 const message = {
   token,
   notification: {
