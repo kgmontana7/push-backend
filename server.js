@@ -64,13 +64,22 @@ app.post('/check-achievements', async (req, res) => {
 
     for (const a of unlocked) {
 const message = {
-  token,
+  token: device.token,
+
   notification: {
     title: 'Achievement unlocked 🏆',
-    body: a.title,
+    body: a.title, // simpele fallback
   },
+
+  data: {
+    achievementId: a.id,
+  },
+
   android: {
     priority: 'high',
+    notification: {
+      channelId: 'default',
+    },
   },
 };
 
