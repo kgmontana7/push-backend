@@ -64,8 +64,8 @@ app.post('/check-achievements', async (req, res) => {
 const message = {
   token,
   notification: {
-    title,
-    body,
+    title: 'Achievement unlocked 🏆',
+    body: a.title,
   },
   android: {
     priority: 'high',
