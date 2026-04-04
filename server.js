@@ -9,9 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // 🔥 Firebase init
-const serviceAccount = JSON.parse(
-  fs.readFileSync('./firebase-key.json', 'utf8')
-);
+const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
