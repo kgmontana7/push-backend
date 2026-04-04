@@ -113,9 +113,16 @@ const unlocked = achievements.filter((a) => days >= a.requirement);
     
 const message = {
   token: device.token,
+
+  notification: {
+    title: 'Achievement unlocked 🏆',
+    body: a.title,
+  },
+
   data: {
     achievementId: a.id,
   },
+
   android: {
     priority: 'high',
   },
