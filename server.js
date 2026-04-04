@@ -109,9 +109,7 @@ setInterval(async () => {
     const unlocked = achievements.filter((a) => days >= a.requirement);
 
     for (const a of unlocked) {
-      // al gestuurd?
-      if (device.sent.includes(a.id)) continue;
-
+    
       const message = {
         token: device.token,
         notification: {
