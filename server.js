@@ -41,7 +41,7 @@ admin.initializeApp({
 
 // 🔥 ACHIEVEMENTS
 const achievements = [
-  { id: '1_day', type: 'days', requirement: 1, title: '1 day clean' },
+  { id: '1_day', type: 'days', requirement: 0, title: '1 day clean' },
   { id: '3_days', type: 'days', requirement: 3, title: '3 days clean' },
   { id: '7_days', type: 'days', requirement: 7, title: '1 week clean' },
 
@@ -116,19 +116,25 @@ setInterval(async () => {
     for (const a of unlocked) {
       if (device.sent.includes(a.id)) continue;
 
-      const message = {
-        token: device.token,
-        data: {
-          achievementId: a.id,
-        },
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'default',
-            sound: 'default',
-          },
-        },
-      };
+const message = {
+  token: device.token,
+  notification: {
+    title: 'Achievement unlocked 🏆',
+    body: a.title,
+  },
+  data: {
+    title: 'Achievement unlocked 🏆',
+    body: a.title,
+    achievementId: a.id,
+  },
+  android: {
+    priority: 'high',
+    notification: {
+      channelId: 'default',
+      sound: 'default',
+    },
+  },
+};
 
       try {
         await admin.messaging().send(message);
