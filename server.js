@@ -1,31 +1,101 @@
 import express from 'express';
 import cors from 'cors';
 import admin from 'firebase-admin';
-
-const devices = [];
+import fs from 'fs';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// 🔥 Firebase init
-const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+const PORT = 3000;
+
+// 🔥 LOAD DEVICES FROM FILE
+const DB_FILE = './devices.json';
+
+let devices = [];
+
+if (fs.existsSync(DB_FILE)) {
+  devices = JSON.parse(fs.readFileSync(DB_FILE));
+}
+
+// 🔥 SAVE DEVICES
+const saveDevices = () => {
+  fs.writeFileSync(DB_FILE, JSON.stringify(devices, null, 2));
+};
+
+// 🔥 FIREBASE INIT
+import serviceAccount from './firebase-key.json' assert { type: 'json' };
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// 🔥 SEND PUSH (vanuit app)
-app.post('/send-achievement', async (req, res) => {
-  const { token, title, body } = req.body;
+// 🔥 ACHIEVEMENTS
+const achievements = [
+  { id: '1_day', requirement: 1, title: '1 day clean' },
+  { id: '3_days', requirement: 3, title: '3 days clean' },
+  { id: '7_days', requirement: 7, title: '1 week clean' },
+];
 
-  try {
+// 🔥 REGISTER DEVICE
+app.post('/register-device', async (req, res) => {
+  const { token, quit_date_time } = req.body;
+
+  if (!token || !quit_date_time) {
+    return res.status(400).send({ error: 'missing data' });
+  }
+
+  let device = devices.find(d => d.token === token);
+
+  if (!device) {
+    device = {
+      token,
+      quit_date_time,
+      sent: [],
+    };
+    devices.push(device);
+  } else {
+    device.quit_date_time = quit_date_time;
+  }
+
+  saveDevices();
+
+  console.log('📱 DEVICES:', devices.length);
+
+  res.send({ success: true });
+});
+
+// 🔥 CHECK ACHIEVEMENTS (VEILIG)
+app.post('/check-achievements', async (req, res) => {
+  const { token, stats } = req.body;
+
+  if (!token || !stats) {
+    return res.status(400).send({ error: 'missing data' });
+  }
+
+  const device = devices.find(d => d.token === token);
+
+  if (!device) {
+    return res.status(404).send({ error: 'device not found' });
+  }
+
+  const unlocked = achievements.filter(a => stats.days >= a.requirement);
+
+  let sentCount = 0;
+
+  for (const a of unlocked) {
+    if (device.sent.includes(a.id)) continue;
+
     const message = {
       token,
       notification: {
-        title,
-        body,
+        title: 'Achievement unlocked 🏆',
+        body: a.title,
+      },
+      data: {
+        achievementId: a.id,
       },
       android: {
         priority: 'high',
@@ -36,67 +106,23 @@ app.post('/send-achievement', async (req, res) => {
       },
     };
 
-    const response = await admin.messaging().send(message);
-
-    res.send({ success: true, response });
-  } catch (e) {
-    console.error('❌ FIREBASE ERROR:', e);
-    res.status(500).send({ error: e.message });
-  }
-});
-
-// 🔥 CHECK ACHIEVEMENTS (real-time vanuit app)
-app.post('/check-achievements', async (req, res) => {
-  console.log('🔥 CHECK CALLED:', req.body);
-
-  const { token, stats } = req.body;
-
-  if (!token || !stats) {
-    return res.status(400).send({ error: 'missing data' });
-  }
-
-  try {
-    const achievements = [
-      { id: '1_day', requirement: 1, title: '1 day clean' },
-      { id: '3_days', requirement: 3, title: '3 days clean' },
-      { id: '7_days', requirement: 7, title: '1 week clean' },
-    ];
-
-    const unlocked = achievements.filter((a) => stats.days >= a.requirement);
-
-    for (const a of unlocked) {
-      const message = {
-        token: token,
-        notification: {
-          title: 'Achievement unlocked 🏆',
-          body: a.title,
-        },
-        data: {
-          achievementId: a.id,
-        },
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'default',
-            sound: 'default',
-          },
-        },
-      };
-
-      const response = await admin.messaging().send(message);
-      console.log('✅ PUSH SENT:', response);
+    try {
+      await admin.messaging().send(message);
+      device.sent.push(a.id);
+      sentCount++;
+    } catch (e) {
+      console.error('❌ PUSH ERROR:', e);
     }
-
-    res.send({ success: true, count: unlocked.length });
-  } catch (e) {
-    console.error('❌ CHECK ERROR:', e);
-    res.status(500).send({ error: e.message });
   }
+
+  saveDevices();
+
+  res.send({ success: true, sent: sentCount });
 });
 
-// 🔥 BACKGROUND CHECK (werkt als app dicht is)
+// 🔥 BACKGROUND CHECK (ELKE 1 MIN)
 setInterval(async () => {
-  console.log('⏱️ RUNNING BACKGROUND CHECK');
+  console.log('⏱️ BACKGROUND CHECK');
 
   const now = new Date();
 
@@ -105,16 +131,9 @@ setInterval(async () => {
     const diff = now - quitDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    const achievements = [
-      { id: '1_day', requirement: 1, title: '1 day clean' },
-      { id: '3_days', requirement: 3, title: '3 days clean' },
-      { id: '7_days', requirement: 7, title: '1 week clean' },
-    ];
-
     const unlocked = achievements.filter(a => days >= a.requirement);
 
     for (const a of unlocked) {
-      // 🔥 voorkom dubbele pushes
       if (device.sent.includes(a.id)) continue;
 
       const message = {
@@ -137,72 +156,23 @@ setInterval(async () => {
 
       try {
         await admin.messaging().send(message);
-        console.log('🚀 AUTO PUSH:', a.title);
-
         device.sent.push(a.id);
+        console.log('🚀 AUTO PUSH:', a.title);
       } catch (e) {
         console.error('❌ AUTO PUSH ERROR:', e);
       }
     }
   }
-}, 15000); // elke 15 sec
 
-// 🔥 REGISTER DEVICE
-app.post('/register-device', async (req, res) => {
-  const { token, quit_date_time } = req.body;
+  saveDevices();
 
-  console.log('📱 REGISTER TOKEN:', token);
+}, 60000);
 
-  if (!token || !quit_date_time) {
-    return res.status(400).send({ error: 'missing data' });
-  }
-
-  // 🔥 altijd nieuwste token gebruiken
-const existing = devices.find(d => d.token === token);
-
-if (!existing) {
-  devices.push({
-    token,
-    quit_date_time,
-    sent: [],
-  });
-} else {
-  // 🔥 update alleen datum, NIET sent resetten
-  existing.quit_date_time = quit_date_time;
-}
-
-// 🔥 TEST PUSH DIRECT NA REGISTRATIE
-try {
-  await admin.messaging().send({
-    token,
-    notification: {
-      title: '🔥 TEST NA REGISTER',
-      body: 'ALS JE DIT ZIET WERKT BACKEND DIRECT',
-    },
-    android: {
-      priority: 'high',
-      notification: {
-        channelId: 'default',
-        sound: 'default',
-      },
-    },
-  });
-
-  console.log('🚀 DIRECT PUSH NA REGISTER');
-} catch (e) {
-  console.error('❌ DIRECT PUSH ERROR:', e);
-}
-
-  console.log('📱 DEVICES:', devices.length);
-
-  res.send({ success: true });
-});
-
-// test route
+// TEST
 app.get('/', (req, res) => {
-  res.send('Push backend running 🔥');
+  res.send('Backend running 🔥');
 });
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
 });
