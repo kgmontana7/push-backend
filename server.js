@@ -26,7 +26,9 @@ const saveDevices = () => {
 };
 
 // 🔥 FIREBASE INIT
-import serviceAccount from './firebase-key.json' assert { type: 'json' };
+const serviceAccount = JSON.parse(
+  fs.readFileSync('./firebase-key.json', 'utf-8')
+);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
