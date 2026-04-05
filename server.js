@@ -29,10 +29,8 @@ const saveDevices = () => {
 let serviceAccount;
 
 if (process.env.FIREBASE_KEY) {
-  // 🔥 Render / productie
   serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 } else {
-  // 🔥 lokaal
   serviceAccount = JSON.parse(
     fs.readFileSync('./firebase-key.json', 'utf-8')
   );
@@ -77,7 +75,7 @@ app.post('/register-device', async (req, res) => {
   res.send({ success: true });
 });
 
-// 🔥 CHECK ACHIEVEMENTS (VEILIG)
+// 🔥 CHECK ACHIEVEMENTS
 app.post('/check-achievements', async (req, res) => {
   const { token, stats } = req.body;
 
@@ -105,6 +103,8 @@ app.post('/check-achievements', async (req, res) => {
         body: a.title,
       },
       data: {
+        title: 'Achievement unlocked 🏆',
+        body: a.title,
         achievementId: a.id,
       },
       android: {
@@ -153,6 +153,8 @@ setInterval(async () => {
           body: a.title,
         },
         data: {
+          title: 'Achievement unlocked 🏆',
+          body: a.title,
           achievementId: a.id,
         },
         android: {
@@ -178,7 +180,7 @@ setInterval(async () => {
 
 }, 60000);
 
-// 🔥 TEST PUSH (HANDMATIG)
+// 🔥 TEST PUSH (POST)
 app.post('/send-achievement', async (req, res) => {
   try {
     const { token, title, body } = req.body;
@@ -194,6 +196,8 @@ app.post('/send-achievement', async (req, res) => {
         body: body || 'Test message',
       },
       data: {
+        title: title || 'Test push',
+        body: body || 'Test message',
         achievementId: 'test123',
       },
       android: {
@@ -217,11 +221,7 @@ app.post('/send-achievement', async (req, res) => {
   }
 });
 
-// TEST
-app.get('/', (req, res) => {
-  res.send('Backend running 🔥');
-});
-
+// 🔥 TEST ROUTE (GET)
 app.get('/test-push', async (req, res) => {
   const device = devices[0];
 
@@ -233,6 +233,11 @@ app.get('/test-push', async (req, res) => {
       notification: {
         title: '🔥 TEST',
         body: 'werkt dit?',
+      },
+      data: {
+        title: '🔥 TEST',
+        body: 'werkt dit?',
+        achievementId: 'test123',
       },
       android: {
         priority: 'high',
@@ -250,6 +255,11 @@ app.get('/test-push', async (req, res) => {
     console.error('❌ TEST PUSH ERROR:', e);
     res.send('error');
   }
+});
+
+// TEST
+app.get('/', (req, res) => {
+  res.send('Backend running 🔥');
 });
 
 app.listen(PORT, () => {
