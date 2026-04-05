@@ -222,6 +222,36 @@ app.get('/', (req, res) => {
   res.send('Backend running 🔥');
 });
 
+app.get('/test-push', async (req, res) => {
+  const device = devices[0];
+
+  if (!device) return res.send('no device');
+
+  try {
+    await admin.messaging().send({
+      token: device.token,
+      notification: {
+        title: '🔥 TEST',
+        body: 'werkt dit?',
+      },
+      android: {
+        priority: 'high',
+        notification: {
+          channelId: 'default',
+          sound: 'default',
+        },
+      },
+    });
+
+    console.log('🚀 TEST PUSH VIA GET');
+    res.send('push sent');
+
+  } catch (e) {
+    console.error('❌ TEST PUSH ERROR:', e);
+    res.send('error');
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
