@@ -149,10 +149,19 @@ app.post('/send-achievement', async (req, res) => {
 
 const message = {
   token,
-  data: {
+  notification: {
     title: '🔥 TEST PUSH',
     body: 'ALS JE DIT ZIET WERKT HET',
+  },
+  data: {
     achievementId: 'test123',
+  },
+  android: {
+    priority: 'high',
+    notification: {
+      channelId: 'default',
+      sound: 'default',
+    },
   },
 };
     await admin.messaging().send(message);
