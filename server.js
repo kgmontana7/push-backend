@@ -41,7 +41,7 @@ admin.initializeApp({
 
 // 🔥 ACHIEVEMENTS
 const achievements = [
-  { id: '1_day', type: 'days', requirement: 0, title: '1 day clean' },
+  { id: '1_day', type: 'days', requirement: 1, title: '1 day clean' },
   { id: '3_days', type: 'days', requirement: 3, title: '3 days clean' },
   { id: '7_days', type: 'days', requirement: 7, title: '1 week clean' },
 
@@ -160,19 +160,20 @@ app.post('/send-achievement', async (req, res) => {
     }
 
     const message = {
-      token,
-      data: {
-        achievementId: 'test123',
-      },
-      android: {
-        priority: 'high',
-        notification: {
-          channelId: 'default',
-          sound: 'default',
-        },
-      },
-    };
-
+  token,
+  data: {
+    title: '🔥 TEST PUSH',
+    body: 'ALS JE DIT ZIET WERKT HET',
+    achievementId: 'test123',
+  },
+  android: {
+    priority: 'high',
+    notification: {
+      channelId: 'default',
+      sound: 'default',
+    },
+  },
+};
     await admin.messaging().send(message);
 
     console.log('🚀 TEST PUSH SENT');
