@@ -118,24 +118,12 @@ setInterval(async () => {
 
 const message = {
   token: device.token,
-  notification: {
-    title: 'Achievement unlocked 🏆',
-    body: a.title,
-  },
   data: {
     title: 'Achievement unlocked 🏆',
     body: a.title,
     achievementId: a.id,
   },
-  android: {
-    priority: 'high',
-    notification: {
-      channelId: 'default',
-      sound: 'default',
-    },
-  },
 };
-
       try {
         await admin.messaging().send(message);
         device.sent.push(a.id);
@@ -159,19 +147,12 @@ app.post('/send-achievement', async (req, res) => {
       return res.status(400).send({ error: 'No token' });
     }
 
-    const message = {
+const message = {
   token,
   data: {
     title: '🔥 TEST PUSH',
     body: 'ALS JE DIT ZIET WERKT HET',
     achievementId: 'test123',
-  },
-  android: {
-    priority: 'high',
-    notification: {
-      channelId: 'default',
-      sound: 'default',
-    },
   },
 };
     await admin.messaging().send(message);
@@ -196,26 +177,14 @@ app.get('/test-push', async (req, res) => {
 
   for (const device of devices) {
     try {
-      await admin.messaging().send({
+   await admin.messaging().send({
   token: device.token,
-  notification: {
-    title: '🔥 TEST TITEL',
-    body: 'Dit is een echte notificatie 🚀',
-  },
   data: {
     title: '🔥 TEST TITEL',
     body: 'Dit is een echte notificatie 🚀',
     achievementId: 'test123',
   },
-  android: {
-    priority: 'high',
-    notification: {
-      channelId: 'default',
-      sound: 'default',
-    },
-  },
 });
-
       success++;
     } catch (e) {
       console.error('❌ TOKEN FAILED:', device.token);
