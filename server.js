@@ -11,21 +11,20 @@ app.use(express.json());
 
 const PORT = 3000;
 
-// 🔥 LOAD DEVICES FROM FILE
+// 🔥 LOAD DEVICES
 const DB_FILE = './devices.json';
-
 let devices = [];
 
 if (fs.existsSync(DB_FILE)) {
   devices = JSON.parse(fs.readFileSync(DB_FILE));
 }
 
-// 🔥 SAVE DEVICES
+// 🔥 SAVE
 const saveDevices = () => {
   fs.writeFileSync(DB_FILE, JSON.stringify(devices, null, 2));
 };
 
-// 🔥 FIREBASE INIT
+// 🔥 FIREBASE
 let serviceAccount;
 
 if (process.env.FIREBASE_KEY) {
@@ -40,16 +39,28 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// 🔥 ACHIEVEMENTS
+// 🔥 ACHIEVEMENTS (SLIM)
 const achievements = [
-  { id: '1_day', requirement: 1, title: '1 day clean' },
-  { id: '3_days', requirement: 3, title: '3 days clean' },
-  { id: '7_days', requirement: 7, title: '1 week clean' },
+  { id: '1_day', type: 'days', requirement: 1, title: '1 day clean' },
+  { id: '3_days', type: 'days', requirement: 3, title: '3 days clean' },
+  { id: '7_days', type: 'days', requirement: 7, title: '1 week clean' },
+
+  { id: '50_joints', type: 'joints', requirement: 50, title: '50 joints avoided' },
+  { id: '100_joints', type: 'joints', requirement: 100, title: '100 joints avoided' },
+
+  { id: '50_euro', type: 'money', requirement: 50, title: '€50 saved' },
+  { id: '100_euro', type: 'money', requirement: 100, title: '€100 saved' },
 ];
 
 // 🔥 REGISTER DEVICE
 app.post('/register-device', async (req, res) => {
-  const { token, quit_date_time } = req.body;
+  const {
+    token,
+    quit_date_time,
+    joints_per_day,
+    grams_per_day,
+    price_per_gram
+  } = req.body;
 
   if (!token || !quit_date_time) {
     return res.status(400).send({ error: 'missing data' });
@@ -61,76 +72,26 @@ app.post('/register-device', async (req, res) => {
     device = {
       token,
       quit_date_time,
+      joints_per_day,
+      grams_per_day,
+      price_per_gram,
       sent: [],
     };
     devices.push(device);
   } else {
     device.quit_date_time = quit_date_time;
+    device.joints_per_day = joints_per_day;
+    device.grams_per_day = grams_per_day;
+    device.price_per_gram = price_per_gram;
   }
 
   saveDevices();
-
   console.log('📱 DEVICES:', devices.length);
 
   res.send({ success: true });
 });
 
-// 🔥 CHECK ACHIEVEMENTS
-app.post('/check-achievements', async (req, res) => {
-  const { token, stats } = req.body;
-
-  if (!token || !stats) {
-    return res.status(400).send({ error: 'missing data' });
-  }
-
-  const device = devices.find(d => d.token === token);
-
-  if (!device) {
-    return res.status(404).send({ error: 'device not found' });
-  }
-
-  const unlocked = achievements.filter(a => stats.days >= a.requirement);
-
-  let sentCount = 0;
-
-  for (const a of unlocked) {
-    if (device.sent.includes(a.id)) continue;
-
-    const message = {
-      token,
-      notification: {
-        title: 'Achievement unlocked 🏆',
-        body: a.title,
-      },
-      data: {
-        title: 'Achievement unlocked 🏆',
-        body: a.title,
-        achievementId: a.id,
-      },
-      android: {
-        priority: 'high',
-        notification: {
-          channelId: 'default',
-          sound: 'default',
-        },
-      },
-    };
-
-    try {
-      await admin.messaging().send(message);
-      device.sent.push(a.id);
-      sentCount++;
-    } catch (e) {
-      console.error('❌ PUSH ERROR:', e);
-    }
-  }
-
-  saveDevices();
-
-  res.send({ success: true, sent: sentCount });
-});
-
-// 🔥 BACKGROUND CHECK (ELKE 1 MIN)
+// 🔥 BACKGROUND CHECK (BREIN)
 setInterval(async () => {
   console.log('⏱️ BACKGROUND CHECK');
 
@@ -139,9 +100,18 @@ setInterval(async () => {
   for (const device of devices) {
     const quitDate = new Date(device.quit_date_time);
     const diff = now - quitDate;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    const unlocked = achievements.filter(a => days >= a.requirement);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const jointsAvoided = days * (device.joints_per_day || 0);
+    const gramsAvoided = days * (device.grams_per_day || 0);
+    const moneySaved = gramsAvoided * (device.price_per_gram || 0);
+
+    const unlocked = achievements.filter(a => {
+      if (a.type === 'days') return days >= a.requirement;
+      if (a.type === 'joints') return jointsAvoided >= a.requirement;
+      if (a.type === 'money') return moneySaved >= a.requirement;
+      return false;
+    });
 
     for (const a of unlocked) {
       if (device.sent.includes(a.id)) continue;
@@ -169,9 +139,9 @@ setInterval(async () => {
       try {
         await admin.messaging().send(message);
         device.sent.push(a.id);
-        console.log('🚀 AUTO PUSH:', a.title);
+        console.log('🚀 PUSH:', a.title);
       } catch (e) {
-        console.error('❌ AUTO PUSH ERROR:', e);
+        console.error('❌ PUSH ERROR:', e);
       }
     }
   }
@@ -180,7 +150,7 @@ setInterval(async () => {
 
 }, 60000);
 
-// 🔥 TEST PUSH (POST)
+// 🔥 TEST PUSH (HANDMATIG)
 app.post('/send-achievement', async (req, res) => {
   try {
     const { token, title, body } = req.body;
@@ -209,11 +179,10 @@ app.post('/send-achievement', async (req, res) => {
       },
     };
 
-    const response = await admin.messaging().send(message);
+    await admin.messaging().send(message);
 
     console.log('🚀 TEST PUSH SENT');
-
-    res.send({ success: true, response });
+    res.send({ success: true });
 
   } catch (e) {
     console.error('❌ TEST PUSH ERROR:', e);
@@ -221,7 +190,7 @@ app.post('/send-achievement', async (req, res) => {
   }
 });
 
-// 🔥 TEST ROUTE (GET)
+// 🔥 TEST ROUTE
 app.get('/test-push', async (req, res) => {
   const device = devices[0];
 
@@ -232,11 +201,11 @@ app.get('/test-push', async (req, res) => {
       token: device.token,
       notification: {
         title: '🔥 TEST',
-        body: 'alles werkt',
+        body: 'alles werkt 🚀',
       },
       data: {
         title: '🔥 TEST',
-        body: 'alles werkt 2',
+        body: 'alles werkt 🚀',
         achievementId: 'test123',
       },
       android: {
@@ -248,16 +217,15 @@ app.get('/test-push', async (req, res) => {
       },
     });
 
-    console.log('🚀 TEST PUSH VIA GET');
+    console.log('🚀 TEST PUSH');
     res.send('push sent');
 
   } catch (e) {
-    console.error('❌ TEST PUSH ERROR:', e);
+    console.error('❌ TEST ERROR:', e);
     res.send('error');
   }
 });
 
-// TEST
 app.get('/', (req, res) => {
   res.send('Backend running 🔥');
 });
