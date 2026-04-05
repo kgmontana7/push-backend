@@ -232,11 +232,11 @@ app.get('/test-push', async (req, res) => {
       token: device.token,
       notification: {
         title: '🔥 TEST',
-        body: 'werkt dit?',
+        body: 'alles werkt',
       },
       data: {
         title: '🔥 TEST',
-        body: 'werkt dit?',
+        body: 'alles werkt 2',
         achievementId: 'test123',
       },
       android: {
