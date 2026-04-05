@@ -192,38 +192,52 @@ app.post('/send-achievement', async (req, res) => {
 
 // 🔥 TEST ROUTE
 app.get('/test-push', async (req, res) => {
-  const device = devices[0];
-
-  if (!device) return res.send('no device');
-
-  try {
-    await admin.messaging().send({
-      token: device.token,
-      notification: {
-        title: '🔥 TEST',
-        body: 'alles werkt 🚀',
-      },
-      data: {
-        title: '🔥 TEST',
-        body: 'alles werkt 🚀',
-        achievementId: 'test123',
-      },
-      android: {
-        priority: 'high',
-        notification: {
-          channelId: 'default',
-          sound: 'default',
-        },
-      },
-    });
-
-    console.log('🚀 TEST PUSH');
-    res.send('push sent');
-
-  } catch (e) {
-    console.error('❌ TEST ERROR:', e);
-    res.send('error');
+  if (devices.length === 0) {
+    return res.send('no device');
   }
+
+  let success = 0;
+  let failed = 0;
+
+  for (const device of devices) {
+    try {
+      await admin.messaging().send({
+        token: device.token,
+        notification: {
+          title: '🔥 TEST',
+          body: 'alles werkt 🚀',
+        },
+        data: {
+          title: '🔥 TEST',
+          body: 'alles werkt 🚀',
+          achievementId: 'test123',
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: 'default',
+            sound: 'default',
+          },
+        },
+      });
+
+      success++;
+    } catch (e) {
+      console.error('❌ TOKEN FAILED:', device.token);
+
+      // 🔥 verwijder kapotte tokens
+      device.invalid = true;
+      failed++;
+    }
+  }
+
+  // 🔥 cleanup
+  devices = devices.filter(d => !d.invalid);
+  saveDevices();
+
+  console.log(`✅ SUCCESS: ${success} | ❌ FAILED: ${failed}`);
+
+  res.send(`success: ${success}, failed: ${failed}`);
 });
 
 app.get('/', (req, res) => {
