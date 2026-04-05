@@ -39,7 +39,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// 🔥 ACHIEVEMENTS (SLIM)
+// 🔥 ACHIEVEMENTS
 const achievements = [
   { id: '1_day', type: 'days', requirement: 1, title: '1 day clean' },
   { id: '3_days', type: 'days', requirement: 3, title: '3 days clean' },
@@ -118,13 +118,7 @@ setInterval(async () => {
 
       const message = {
         token: device.token,
-        notification: {
-          title: 'Achievement unlocked 🏆',
-          body: a.title,
-        },
         data: {
-          title: 'Achievement unlocked 🏆',
-          body: a.title,
           achievementId: a.id,
         },
         android: {
@@ -150,10 +144,10 @@ setInterval(async () => {
 
 }, 60000);
 
-// 🔥 TEST PUSH (HANDMATIG)
+// 🔥 TEST PUSH (POST)
 app.post('/send-achievement', async (req, res) => {
   try {
-    const { token, title, body } = req.body;
+    const { token } = req.body;
 
     if (!token) {
       return res.status(400).send({ error: 'No token' });
@@ -161,13 +155,7 @@ app.post('/send-achievement', async (req, res) => {
 
     const message = {
       token,
-      notification: {
-        title: title || 'Test push',
-        body: body || 'Test message',
-      },
       data: {
-        title: title || 'Test push',
-        body: body || 'Test message',
         achievementId: 'test123',
       },
       android: {
@@ -203,13 +191,7 @@ app.get('/test-push', async (req, res) => {
     try {
       await admin.messaging().send({
         token: device.token,
-        notification: {
-          title: '🔥 TEST',
-          body: 'alles werkt 🚀',
-        },
         data: {
-          title: '🔥 TEST',
-          body: 'alles werkt 🚀',
           achievementId: 'test123',
         },
         android: {
@@ -224,14 +206,11 @@ app.get('/test-push', async (req, res) => {
       success++;
     } catch (e) {
       console.error('❌ TOKEN FAILED:', device.token);
-
-      // 🔥 verwijder kapotte tokens
       device.invalid = true;
       failed++;
     }
   }
 
-  // 🔥 cleanup
   devices = devices.filter(d => !d.invalid);
   saveDevices();
 
