@@ -26,9 +26,17 @@ const saveDevices = () => {
 };
 
 // 🔥 FIREBASE INIT
-const serviceAccount = JSON.parse(
-  fs.readFileSync('./firebase-key.json', 'utf-8')
-);
+let serviceAccount;
+
+if (process.env.FIREBASE_KEY) {
+  // 🔥 Render / productie
+  serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+} else {
+  // 🔥 lokaal
+  serviceAccount = JSON.parse(
+    fs.readFileSync('./firebase-key.json', 'utf-8')
+  );
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
