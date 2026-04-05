@@ -190,18 +190,24 @@ app.get('/test-push', async (req, res) => {
   for (const device of devices) {
     try {
       await admin.messaging().send({
-        token: device.token,
-        data: {
-          achievementId: 'test123',
-        },
-        android: {
-          priority: 'high',
-          notification: {
-            channelId: 'default',
-            sound: 'default',
-          },
-        },
-      });
+  token: device.token,
+  notification: {
+    title: '🔥 TEST TITEL',
+    body: 'Dit is een echte notificatie 🚀',
+  },
+  data: {
+    title: '🔥 TEST TITEL',
+    body: 'Dit is een echte notificatie 🚀',
+    achievementId: 'test123',
+  },
+  android: {
+    priority: 'high',
+    notification: {
+      channelId: 'default',
+      sound: 'default',
+    },
+  },
+});
 
       success++;
     } catch (e) {
