@@ -178,6 +178,45 @@ setInterval(async () => {
 
 }, 60000);
 
+// 🔥 TEST PUSH (HANDMATIG)
+app.post('/send-achievement', async (req, res) => {
+  try {
+    const { token, title, body } = req.body;
+
+    if (!token) {
+      return res.status(400).send({ error: 'No token' });
+    }
+
+    const message = {
+      token,
+      notification: {
+        title: title || 'Test push',
+        body: body || 'Test message',
+      },
+      data: {
+        achievementId: 'test123',
+      },
+      android: {
+        priority: 'high',
+        notification: {
+          channelId: 'default',
+          sound: 'default',
+        },
+      },
+    };
+
+    const response = await admin.messaging().send(message);
+
+    console.log('🚀 TEST PUSH SENT');
+
+    res.send({ success: true, response });
+
+  } catch (e) {
+    console.error('❌ TEST PUSH ERROR:', e);
+    res.status(500).send({ error: e.message });
+  }
+});
+
 // TEST
 app.get('/', (req, res) => {
   res.send('Backend running 🔥');
