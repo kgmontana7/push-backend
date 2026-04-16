@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getAchievementDefinitions as getThcstopAchievementDefinitions } from '../thcstop/src/content/achievementDefinitions.js';
+import { getAchievementDefinitions as getThcstopAchievementDefinitions } from './vendors/thcstopAchievementDefinitions.js';
 
 export const SUPPORTED_LANGUAGES = ['nl', 'en', 'es', 'fr', 'de'];
 export const DEFAULT_LANGUAGE = 'en';
@@ -249,11 +249,11 @@ function loadAlcoholstopFactories() {
   if (alcoholstopFactories) return alcoholstopFactories;
 
   const mainSource = fs.readFileSync(
-    path.resolve(__dirname, '../alcoholstop/src/components/milestones/achievementDefinitions.jsx'),
+    path.resolve(__dirname, './vendors/alcoholstopAchievementDefinitions.js'),
     'utf8',
   );
   const spanishSource = fs.readFileSync(
-    path.resolve(__dirname, '../alcoholstop/src/components/milestones/achievementDefinitions-es.js'),
+    path.resolve(__dirname, './vendors/alcoholstopAchievementDefinitions-es.js'),
     'utf8',
   );
   const executableSource = `${mainSource}\n${spanishSource}`.replace(/export const /g, 'const ');
