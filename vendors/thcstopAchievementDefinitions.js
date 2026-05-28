@@ -1,765 +1,562 @@
-﻿const achievements = [
-  {
-    id: 'money_1',
-    type: 'money',
-    requirement: 1,
-    icon: '👛',
-    copy: {
-      nl: { title: 'Het Sparen Begint', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'Saving Starts Here', description: 'You saved {amount}!' },
-      es: { title: 'Empieza el Ahorro', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Les Économies Commencent', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'So Fängt Sparen An', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'money_10',
-    type: 'money',
-    requirement: 10,
-    icon: '📈',
-    copy: {
-      nl: { title: 'Tientje Binnen!', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'Tenner In!', description: 'You saved {amount}!' },
-      es: { title: '¡Diez Ahorrados!', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Dix de Gagnés !', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Zehner Drin!', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_1',
-    type: 'grams',
-    requirement: 1,
-    icon: '🥇',
-    copy: {
-      nl: { title: 'Eerste Drempel Over', description: 'Je hebt 1 gram vermeden!' },
-      en: { title: 'First Threshold Passed', description: 'You avoided 1 gram!' },
-      es: { title: 'Primer Umbral Superado', description: '¡Has evitado 1 gramo!' },
-      fr: { title: 'Premier Cap Franchi', description: 'Vous avez évité 1 gramme !' },
-      de: { title: 'Erste Hürde Geschafft', description: 'Du hast 1 Gramm vermieden!' },
-    },
-  },
-  {
-    id: 'days_1',
-    type: 'days',
-    requirement: 1,
-    icon: '1️⃣',
-    copy: {
-      nl: { title: 'De Eerste 24 Uur', description: 'Je bent 1 dag THC-vrij!' },
-      en: { title: 'The First 24 Hours', description: 'You are 1 day THC-free!' },
-      es: { title: 'Las Primeras 24 Horas', description: '¡Llevas 1 día sin THC!' },
-      fr: { title: 'Les Premières 24 Heures', description: 'Vous êtes sans THC depuis 1 jour !' },
-      de: { title: 'Die Ersten 24 Stunden', description: 'Du bist 1 Tag THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_5',
-    type: 'joints',
-    requirement: 5,
-    icon: '5️⃣',
-    copy: {
-      nl: { title: 'Vijf Op Een Rij', description: 'Je hebt 5 joints vermeden!' },
-      en: { title: 'Five in a Row', description: 'You avoided 5 joints!' },
-      es: { title: 'Cinco Seguidos', description: '¡Has evitado 5 porros!' },
-      fr: { title: 'Cinq d’Affilée', description: 'Vous avez évité 5 joints !' },
-      de: { title: 'Fünf in Folge', description: 'Du hast 5 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'money_25',
-    type: 'money',
-    requirement: 25,
-    icon: '💰',
-    copy: {
-      nl: { title: 'Het Begint Te Tellen', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'It Starts to Count', description: 'You saved {amount}!' },
-      es: { title: 'Ya Empieza a Contar', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Ça Commence à Compter', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Jetzt Zählt Es', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'days_2',
-    type: 'days',
-    requirement: 2,
-    icon: '🐫',
-    copy: {
-      nl: { title: 'Niet Toegegeven', description: 'Je bent 2 dagen THC-vrij!' },
-      en: { title: 'You Didn\'t Give In', description: 'You are 2 days THC-free!' },
-      es: { title: 'No Cediste', description: '¡Llevas 2 días sin THC!' },
-      fr: { title: 'Tu N’as Pas Cédé', description: 'Vous êtes sans THC depuis 2 jours !' },
-      de: { title: 'Nicht Nachgegeben', description: 'Du bist 2 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'money_50',
-    type: 'money',
-    requirement: 50,
-    icon: '💸',
-    copy: {
-      nl: { title: 'De Stapel Groeit', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'The Stack Grows', description: 'You saved {amount}!' },
-      es: { title: 'La Pila Crece', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'La Pile Grossit', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Der Stapel Wächst', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'days_5',
-    type: 'days',
-    requirement: 5,
-    icon: '✋',
-    copy: {
-      nl: { title: 'Ritme Gevonden', description: 'Je bent 5 dagen THC-vrij!' },
-      en: { title: 'Found Your Rhythm', description: 'You are 5 days THC-free!' },
-      es: { title: 'Ritmo Encontrado', description: '¡Llevas 5 días sin THC!' },
-      fr: { title: 'Rythme Trouvé', description: 'Vous êtes sans THC depuis 5 jours !' },
-      de: { title: 'Rhythmus Gefunden', description: 'Du bist 5 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'money_100',
-    type: 'money',
-    requirement: 100,
-    icon: '💰',
-    copy: {
-      nl: { title: 'Dit Tikt Serieus Aan', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'This Is Adding Up', description: 'You saved {amount}!' },
-      es: { title: 'Esto Ya Suma en Serio', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Là, Ça Compte Vraiment', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Das Läppert Sich Richtig', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'joints_25',
-    type: 'joints',
-    requirement: 25,
-    icon: '💪',
-    copy: {
-      nl: { title: 'Lekker Bezig', description: 'Je hebt 25 joints vermeden!' },
-      en: { title: 'Doing Great', description: 'You avoided 25 joints!' },
-      es: { title: 'Vas Muy Bien', description: '¡Has evitado 25 porros!' },
-      fr: { title: 'Tu Gères Bien', description: 'Vous avez évité 25 joints !' },
-      de: { title: 'Richtig Stark', description: 'Du hast 25 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'grams_10',
-    type: 'grams',
-    requirement: 10,
-    icon: '😉',
-    copy: {
-      nl: { title: 'Dubbele Cijfers', description: 'Je hebt 10 gram vermeden!' },
-      en: { title: 'Double Digits', description: 'You avoided 10 grams!' },
-      es: { title: 'Doble Dígito', description: '¡Has evitado 10 gramos!' },
-      fr: { title: 'Double Chiffre', description: 'Vous avez évité 10 grammes !' },
-      de: { title: 'Doppelte Zahlen', description: 'Du hast 10 Gramm vermieden!' },
-    },
-  },
-  {
-    id: 'days_7',
-    type: 'days',
-    requirement: 7,
-    icon: '✅',
-    copy: {
-      nl: { title: 'Week Eén Afgevinkt', description: 'Je bent 1 week THC-vrij!' },
-      en: { title: 'Week One Checked Off', description: 'You are 1 week THC-free!' },
-      es: { title: 'Semana Uno Tachada', description: '¡Llevas 1 semana sin THC!' },
-      fr: { title: 'Semaine Une Validée', description: 'Vous êtes sans THC depuis 1 semaine !' },
-      de: { title: 'Woche Eins Abgehakt', description: 'Du bist 1 Woche THC-frei!' },
-    },
-  },
-  {
-    id: 'days_10',
-    type: 'days',
-    requirement: 10,
-    icon: '🔟',
-    copy: {
-      nl: { title: 'Tien! Tien! Tien!', description: 'Je bent 10 dagen THC-vrij!' },
-      en: { title: 'Ten! Ten! Ten!', description: 'You are 10 days THC-free!' },
-      es: { title: '¡Diez! ¡Diez! ¡Diez!', description: '¡Llevas 10 días sin THC!' },
-      fr: { title: 'Dix ! Dix ! Dix !', description: 'Vous êtes sans THC depuis 10 jours !' },
-      de: { title: 'Zehn! Zehn! Zehn!', description: 'Du bist 10 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_50',
-    type: 'joints',
-    requirement: 50,
-    icon: '🏆',
-    copy: {
-      nl: { title: 'Wat Een Mijlpaal', description: 'Je hebt 50 joints vermeden!' },
-      en: { title: 'What a Milestone', description: 'You avoided 50 joints!' },
-      es: { title: 'Qué Gran Hito', description: '¡Has evitado 50 porros!' },
-      fr: { title: 'Quel Cap !', description: 'Vous avez évité 50 joints !' },
-      de: { title: 'Was für ein Meilenstein', description: 'Du hast 50 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'money_250',
-    type: 'money',
-    requirement: 250,
-    icon: '🤑',
-    copy: {
-      nl: { title: 'Volhouden Loont', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'Persistence Pays', description: 'You saved {amount}!' },
-      es: { title: 'Aguantar Compensa', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Tenir Bon Rapporte', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Dranbleiben Lohnt Sich', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'days_14',
-    type: 'days',
-    requirement: 14,
-    icon: '😎',
-    copy: {
-      nl: { title: 'Je Kunt Dit!', description: 'Je bent 2 weken THC-vrij!' },
-      en: { title: 'You Can Do This!', description: 'You are 2 weeks THC-free!' },
-      es: { title: '¡Tú Puedes!', description: '¡Llevas 2 semanas sin THC!' },
-      fr: { title: 'Tu Peux le Faire !', description: 'Vous êtes sans THC depuis 2 semaines !' },
-      de: { title: 'Du Schaffst Das!', description: 'Du bist 2 Wochen THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_100',
-    type: 'joints',
-    requirement: 100,
-    icon: '💯',
-    copy: {
-      nl: { title: 'Honderd Keer De Baas', description: 'Je hebt 100 joints vermeden!' },
-      en: { title: 'Boss One Hundred Times', description: 'You avoided 100 joints!' },
-      es: { title: 'Cien Veces el Jefe', description: '¡Has evitado 100 porros!' },
-      fr: { title: 'Cent Fois le Boss', description: 'Vous avez évité 100 joints !' },
-      de: { title: 'Hundertmal der Boss', description: 'Du hast 100 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_21',
-    type: 'days',
-    requirement: 21,
-    icon: '☀️',
-    copy: {
-      nl: { title: 'Je Pakt Je Leven Terug', description: 'Je bent 3 weken THC-vrij!' },
-      en: { title: 'You’re Taking Your Life Back', description: 'You are 3 weeks THC-free!' },
-      es: { title: 'Recuperas Tu Vida', description: '¡Llevas 3 semanas sin THC!' },
-      fr: { title: 'Tu Reprends Ta Vie', description: 'Vous êtes sans THC depuis 3 semaines !' },
-      de: { title: 'Du Holst Dir Dein Leben Zurück', description: 'Du bist 3 Wochen THC-frei!' },
-    },
-  },
-  {
-    id: 'money_500',
-    type: 'money',
-    requirement: 500,
-    icon: '🛑',
-    copy: {
-      nl: { title: 'Je Bent Niet Te Stoppen', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'You Can’t Be Stopped', description: 'You saved {amount}!' },
-      es: { title: 'No Hay Quien Te Pare', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'On Ne T’Arrête Plus', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Du Bist Nicht Zu Stoppen', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_50',
-    type: 'grams',
-    requirement: 50,
-    icon: '👍',
-    copy: {
-      nl: { title: 'Dit Is Consistentie!', description: 'Je hebt 50 gram vermeden!' },
-      en: { title: 'This Is Consistency!', description: 'You avoided 50 grams!' },
-      es: { title: '¡Eso Sí Es Constancia!', description: '¡Has evitado 50 gramos!' },
-      fr: { title: 'Voilà la Régularité !', description: 'Vous avez évité 50 grammes !' },
-      de: { title: 'Das Ist Konstanz!', description: 'Du hast 50 Gramm vermieden!' },
-    },
-  },
-  {
-    id: 'days_30',
-    type: 'days',
-    requirement: 30,
-    icon: '📆',
-    copy: {
-      nl: { title: 'Een Maand In Controle', description: 'Je bent 1 maand THC-vrij!' },
-      en: { title: 'One Month in Control', description: 'You are 1 month THC-free!' },
-      es: { title: 'Un Mes Bajo Control', description: '¡Llevas 1 mes sin THC!' },
-      fr: { title: 'Un Mois de Contrôle', description: 'Vous êtes sans THC depuis 1 mois !' },
-      de: { title: 'Ein Monat in Kontrolle', description: 'Du bist 1 Monat THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_250',
-    type: 'joints',
-    requirement: 250,
-    icon: '🚂',
-    copy: {
-      nl: { title: 'Je Gaat Als Een Trein', description: 'Je hebt 250 joints vermeden!' },
-      en: { title: 'You’re Like a Train', description: 'You avoided 250 joints!' },
-      es: { title: 'Vas Como un Tren', description: '¡Has evitado 250 porros!' },
-      fr: { title: 'Tu Files Comme un Train', description: 'Vous avez évité 250 joints !' },
-      de: { title: 'Du Gehst Ab Wie Ein Zug', description: 'Du hast 250 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_42',
-    type: 'days',
-    requirement: 42,
-    icon: '😁',
-    copy: {
-      nl: { title: 'Zes Weken Momentum', description: 'Je bent 6 weken THC-vrij!' },
-      en: { title: 'Six Weeks of Momentum', description: 'You are 6 weeks THC-free!' },
-      es: { title: 'Seis Semanas de Impulso', description: '¡Llevas 6 semanas sin THC!' },
-      fr: { title: 'Six Semaines d’Élan', description: 'Vous êtes sans THC depuis 6 semaines !' },
-      de: { title: 'Sechs Wochen Momentum', description: 'Du bist 6 Wochen THC-frei!' },
-    },
-  },
-  {
-    id: 'money_1000',
-    type: 'money',
-    requirement: 1000,
-    icon: '💶',
-    copy: {
-      nl: { title: 'Dit Is Geen Kleingeld Meer', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'This Isn’t Pocket Change Anymore', description: 'You saved {amount}!' },
-      es: { title: 'Esto Ya No Es Calderilla', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Ce N’est Plus de la Petite Monnaie', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Das Ist Kein Kleingeld Mehr', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_100',
-    type: 'grams',
-    requirement: 100,
-    icon: '🏁',
-    copy: {
-      nl: { title: 'Je Bent Aan Het Winnen!', description: 'Je hebt 100 gram vermeden!' },
-      en: { title: 'You’re Winning!', description: 'You avoided 100 grams!' },
-      es: { title: '¡Vas Ganando!', description: '¡Has evitado 100 gramos!' },
-      fr: { title: 'Tu es en Train de Gagner !', description: 'Vous avez évité 100 grammes !' },
-      de: { title: 'Du Bist Auf Siegerkurs!', description: 'Du hast 100 Gramm vermieden!' },
-    },
-  },
-  {
-    id: 'joints_300',
-    type: 'joints',
-    requirement: 300,
-    icon: '🧲',
-    copy: {
-      nl: { title: 'IJzersterk', description: 'Je hebt 300 joints vermeden!' },
-      en: { title: 'Iron Strong', description: 'You avoided 300 joints!' },
-      es: { title: 'Fuerza de Hierro', description: '¡Has evitado 300 porros!' },
-      fr: { title: 'Solide Comme l’Acier', description: 'Vous avez évité 300 joints !' },
-      de: { title: 'Eisenstark', description: 'Du hast 300 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_60',
-    type: 'days',
-    requirement: 60,
-    icon: '🧱',
-    copy: {
-      nl: { title: 'Je Bent Niet Te Breken', description: 'Je bent 2 maanden THC-vrij!' },
-      en: { title: 'You Won’t Break', description: 'You are 2 months THC-free!' },
-      es: { title: 'No Te Rompes', description: '¡Llevas 2 meses sin THC!' },
-      fr: { title: 'Tu Ne Casses Pas', description: 'Vous êtes sans THC depuis 2 mois !' },
-      de: { title: 'Du Bist Nicht Zu Brechen', description: 'Du bist 2 Monate THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_400',
-    type: 'joints',
-    requirement: 400,
-    icon: '⏩',
-    copy: {
-      nl: { title: 'Next Level', description: 'Je hebt 400 joints vermeden!' },
-      en: { title: 'Next Level', description: 'You avoided 400 joints!' },
-      es: { title: 'Siguiente Nivel', description: '¡Has evitado 400 porros!' },
-      fr: { title: 'Niveau Suivant', description: 'Vous avez évité 400 joints !' },
-      de: { title: 'Next Level', description: 'Du hast 400 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_90',
-    type: 'days',
-    requirement: 90,
-    icon: '🌊',
-    copy: {
-      nl: { title: 'Je Surft Door', description: 'Je bent 3 maanden THC-vrij!' },
-      en: { title: 'You Keep Surfing', description: 'You are 3 months THC-free!' },
-      es: { title: 'Sigues Surfeando', description: '¡Llevas 3 meses sin THC!' },
-      fr: { title: 'Tu Continues de Glisser', description: 'Vous êtes sans THC depuis 3 mois !' },
-      de: { title: 'Du Surfst Weiter', description: 'Du bist 3 Monate THC-frei!' },
-    },
-  },
-  {
-    id: 'days_100',
-    type: 'days',
-    requirement: 100,
-    icon: '💣',
-    copy: {
-      nl: { title: 'Bam, Weer Een Stap', description: 'Je bent 100 dagen THC-vrij!' },
-      en: { title: 'Boom, Another Step', description: 'You are 100 days THC-free!' },
-      es: { title: 'Boom, Otro Paso', description: '¡Llevas 100 días sin THC!' },
-      fr: { title: 'Bam, Encore Une Étape', description: 'Vous êtes sans THC depuis 100 jours !' },
-      de: { title: 'Bam, Wieder Ein Schritt', description: 'Du bist 100 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_500',
-    type: 'joints',
-    requirement: 500,
-    icon: '🏡',
-    copy: {
-      nl: { title: 'Je Staat Als Een Huis', description: 'Je hebt 500 joints vermeden!' },
-      en: { title: 'Solid as a House', description: 'You avoided 500 joints!' },
-      es: { title: 'Firme Como una Casa', description: '¡Has evitado 500 porros!' },
-      fr: { title: 'Solide Comme une Maison', description: 'Vous avez évité 500 joints !' },
-      de: { title: 'Du Stehst Wie Ein Haus', description: 'Du hast 500 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'money_2500',
-    type: 'money',
-    requirement: 2500,
-    icon: '💲',
-    copy: {
-      nl: { title: 'Financiële Master', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'Financial Master', description: 'You saved {amount}!' },
-      es: { title: 'Maestro Financiero', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Maître des Finances', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Finanz-Master', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_250',
-    type: 'grams',
-    requirement: 250,
-    icon: '🔥',
-    copy: {
-      nl: { title: 'On Fire', description: 'Je hebt 250 gram vermeden!' },
-      en: { title: 'On Fire', description: 'You avoided 250 grams!' },
-      es: { title: 'On Fire', description: '¡Has evitado 250 gramos!' },
-      fr: { title: 'En Feu', description: 'Vous avez évité 250 grammes !' },
-      de: { title: 'On Fire', description: 'Du hast 250 Gramm vermieden!' },
-    },
-  },
-  {
-    id: 'days_150',
-    type: 'days',
-    requirement: 150,
-    icon: '⌚',
-    copy: {
-      nl: { title: 'Tijd Werkt Voor Jou', description: 'Je bent 150 dagen THC-vrij!' },
-      en: { title: 'Time Works for You', description: 'You are 150 days THC-free!' },
-      es: { title: 'El Tiempo Juega a Tu Favor', description: '¡Llevas 150 días sin THC!' },
-      fr: { title: 'Le Temps Travaille Pour Toi', description: 'Vous êtes sans THC depuis 150 jours !' },
-      de: { title: 'Die Zeit Arbeitet Für Dich', description: 'Du bist 150 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'days_180',
-    type: 'days',
-    requirement: 180,
-    icon: '👑',
-    copy: {
-      nl: { title: 'Halfjaar Koning', description: 'Je bent 6 maanden THC-vrij!' },
-      en: { title: 'Half-Year King', description: 'You are 6 months THC-free!' },
-      es: { title: 'Rey del Medio Año', description: '¡Llevas 6 meses sin THC!' },
-      fr: { title: 'Roi du Semestre', description: 'Vous êtes sans THC depuis 6 mois !' },
-      de: { title: 'Halbjahres-König', description: 'Du bist 6 Monate THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_1000',
-    type: 'joints',
-    requirement: 1000,
-    icon: '🌋',
-    copy: {
-      nl: { title: 'Vulkanisch Succes', description: 'Je hebt 1000 joints vermeden!' },
-      en: { title: 'Volcanic Success', description: 'You avoided 1000 joints!' },
-      es: { title: 'Éxito Volcánico', description: '¡Has evitado 1000 porros!' },
-      fr: { title: 'Succès Volcanique', description: 'Vous avez évité 1000 joints !' },
-      de: { title: 'Vulkanischer Erfolg', description: 'Du hast 1000 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_250',
-    type: 'days',
-    requirement: 250,
-    icon: '🌳',
-    copy: {
-      nl: { title: 'Diepe Wortels', description: 'Je bent 250 dagen THC-vrij!' },
-      en: { title: 'Deep Roots', description: 'You are 250 days THC-free!' },
-      es: { title: 'Raíces Profundas', description: '¡Llevas 250 días sin THC!' },
-      fr: { title: 'Racines Profondes', description: 'Vous êtes sans THC depuis 250 jours !' },
-      de: { title: 'Tiefe Wurzeln', description: 'Du bist 250 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'money_5000',
-    type: 'money',
-    requirement: 5000,
-    icon: '🏧',
-    copy: {
-      nl: { title: 'Financieel Stevig', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'Financially Solid', description: 'You saved {amount}!' },
-      es: { title: 'Finanzas Sólidas', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Financièrement Solide', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Finanziell Stabil', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_500',
-    type: 'grams',
-    requirement: 500,
-    icon: '⚖️',
-    copy: {
-      nl: { title: 'Weegschaal van Discipline', description: 'Je hebt 500 gram vermeden!' },
-      en: { title: 'Scales of Discipline', description: 'You avoided 500 grams!' },
-      es: { title: 'Balanza de Disciplina', description: '¡Has evitado 500 gramos!' },
-      fr: { title: 'Balance de Discipline', description: 'Vous avez évité 500 grammes !' },
-      de: { title: 'Waage der Disziplin', description: 'Du hast 500 Gramm vermieden!' },
-    },
-  },
-  {
-    id: 'days_270',
-    type: 'days',
-    requirement: 270,
-    icon: '😌',
-    copy: {
-      nl: { title: 'Herboren', description: 'Je bent 9 maanden THC-vrij!' },
-      en: { title: 'Reborn', description: 'You are 9 months THC-free!' },
-      es: { title: 'Renacido', description: '¡Llevas 9 meses sin THC!' },
-      fr: { title: 'Renaître', description: 'Vous êtes sans THC depuis 9 mois !' },
-      de: { title: 'Wiedergeboren', description: 'Du bist 9 Monate THC-frei!' },
-    },
-  },
-  {
-    id: 'days_365',
-    type: 'days',
-    requirement: 365,
-    icon: '🌟',
-    copy: {
-      nl: { title: 'Een Jaar Verder', description: 'Je bent 1 jaar THC-vrij!' },
-      en: { title: 'One Year Further', description: 'You are 1 year THC-free!' },
-      es: { title: 'Un Año Más Lejos', description: '¡Llevas 1 año sin THC!' },
-      fr: { title: 'Un An Plus Loin', description: 'Vous êtes sans THC depuis 1 an !' },
-      de: { title: 'Ein Jahr Weiter', description: 'Du bist 1 Jahr THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_2000',
-    type: 'joints',
-    requirement: 2000,
-    icon: '🏔️',
-    copy: {
-      nl: { title: 'Topje van de IJsberg', description: 'Je hebt 2000 joints vermeden!' },
-      en: { title: 'Tip of the Iceberg', description: 'You avoided 2000 joints!' },
-      es: { title: 'La Punta del Iceberg', description: '¡Has evitado 2000 porros!' },
-      fr: { title: 'Le Sommet de l’Iceberg', description: 'Vous avez évité 2000 joints !' },
-      de: { title: 'Spitze des Eisbergs', description: 'Du hast 2000 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_500',
-    type: 'days',
-    requirement: 500,
-    icon: '🗺️',
-    copy: {
-      nl: { title: 'Padvinder', description: 'Je bent 500 dagen THC-vrij!' },
-      en: { title: 'Pathfinder', description: 'You are 500 days THC-free!' },
-      es: { title: 'Explorador', description: '¡Llevas 500 días sin THC!' },
-      fr: { title: 'Éclaireur', description: 'Vous êtes sans THC depuis 500 jours !' },
-      de: { title: 'Pfadfinder', description: 'Du bist 500 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'money_10000',
-    type: 'money',
-    requirement: 10000,
-    icon: '🏆',
-    copy: {
-      nl: { title: 'Jij Bent Goud Waard!', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'You’re Worth Gold!', description: 'You saved {amount}!' },
-      es: { title: '¡Vales Oro!', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Tu Vaux de l’Or !', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Du Bist Gold Wert!', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_1000',
-    type: 'grams',
-    requirement: 1000,
-    icon: '🏋️',
-    copy: {
-      nl: { title: 'Dat Is Een Kilo!', description: 'Je hebt 1 kilo vermeden!' },
-      en: { title: 'That’s a Kilo!', description: 'You avoided 1 kilo!' },
-      es: { title: '¡Eso Es Un Kilo!', description: '¡Has evitado 1 kilo!' },
-      fr: { title: 'Ça Fait Un Kilo !', description: 'Vous avez évité 1 kilo !' },
-      de: { title: 'Das Ist Ein Kilo!', description: 'Du hast 1 Kilo vermieden!' },
-    },
-  },
-  {
-    id: 'days_730',
-    type: 'days',
-    requirement: 730,
-    icon: '🤩',
-    copy: {
-      nl: { title: 'Twee Jaar: Legendarisch', description: 'Je bent 2 jaar THC-vrij!' },
-      en: { title: 'Two Years: Legendary', description: 'You are 2 years THC-free!' },
-      es: { title: 'Dos Años: Legendario', description: '¡Llevas 2 años sin THC!' },
-      fr: { title: 'Deux Ans : Légendaire', description: 'Vous êtes sans THC depuis 2 ans !' },
-      de: { title: 'Zwei Jahre: Legendär', description: 'Du bist 2 Jahre THC-frei!' },
-    },
-  },
-  {
-    id: 'days_1000',
-    type: 'days',
-    requirement: 1000,
-    icon: '🎮',
-    copy: {
-      nl: { title: 'Level 1000', description: 'Je bent 1000 dagen THC-vrij!' },
-      en: { title: 'Level 1000', description: 'You are 1000 days THC-free!' },
-      es: { title: 'Nivel 1000', description: '¡Llevas 1000 días sin THC!' },
-      fr: { title: 'Niveau 1000', description: 'Vous êtes sans THC depuis 1000 jours !' },
-      de: { title: 'Level 1000', description: 'Du bist 1000 Tage THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_5000',
-    type: 'joints',
-    requirement: 5000,
-    icon: '🌳',
-    copy: {
-      nl: { title: 'De Boom van Doorzetten', description: 'Je hebt 5.000 joints vermeden!' },
-      en: { title: 'The Tree of Persistence', description: 'You avoided 5,000 joints!' },
-      es: { title: 'El Árbol de la Perseverancia', description: '¡Has evitado 5.000 porros!' },
-      fr: { title: 'L’Arbre de la Persévérance', description: 'Vous avez évité 5 000 joints !' },
-      de: { title: 'Der Baum des Durchhaltens', description: 'Du hast 5.000 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'days_1095',
-    type: 'days',
-    requirement: 1095,
-    icon: '💡',
-    copy: {
-      nl: { title: 'Drie Jaar Lichtpunt', description: 'Je bent 3 jaar THC-vrij!' },
-      en: { title: 'Three-Year Beacon', description: 'You are 3 years THC-free!' },
-      es: { title: 'Tres Años de Luz', description: '¡Llevas 3 años sin THC!' },
-      fr: { title: 'Trois Ans de Lumière', description: 'Vous êtes sans THC depuis 3 ans !' },
-      de: { title: 'Drei Jahre Lichtblick', description: 'Du bist 3 Jahre THC-frei!' },
-    },
-  },
-  {
-    id: 'money_25000',
-    type: 'money',
-    requirement: 25000,
-    icon: '💎',
-    copy: {
-      nl: { title: 'Geslepen Diamant', description: 'Je hebt {amount} bespaard!' },
-      en: { title: 'Polished Diamond', description: 'You saved {amount}!' },
-      es: { title: 'Diamante Pulido', description: '¡Has ahorrado {amount}!' },
-      fr: { title: 'Diamant Taillé', description: 'Vous avez économisé {amount} !' },
-      de: { title: 'Geschliffener Diamant', description: 'Du hast {amount} gespart!' },
-    },
-  },
-  {
-    id: 'grams_2500',
-    type: 'grams',
-    requirement: 2500,
-    icon: '🥂',
-    copy: {
-      nl: { title: 'Proost op Jou!', description: 'Je hebt 2.5 kilo vermeden!' },
-      en: { title: 'Cheers to You!', description: 'You avoided 2.5 kilos!' },
-      es: { title: '¡Brindis Por Ti!', description: '¡Has evitado 2.5 kilos!' },
-      fr: { title: 'Santé à Toi !', description: 'Vous avez évité 2,5 kilos !' },
-      de: { title: 'Prost auf Dich!', description: 'Du hast 2,5 Kilo vermieden!' },
-    },
-  },
-  {
-    id: 'days_1825',
-    type: 'days',
-    requirement: 1825,
-    icon: '❓',
-    copy: {
-      nl: { title: 'Wat Is THC?', description: 'Je bent 5 jaar THC-vrij!' },
-      en: { title: 'What Is THC?', description: 'You are 5 years THC-free!' },
-      es: { title: '¿Qué Es el THC?', description: '¡Llevas 5 años sin THC!' },
-      fr: { title: 'C’est Quoi le THC ?', description: 'Vous êtes sans THC depuis 5 ans !' },
-      de: { title: 'Was Ist THC?', description: 'Du bist 5 Jahre THC-frei!' },
-    },
-  },
-  {
-    id: 'joints_10000',
-    type: 'joints',
-    requirement: 10000,
-    icon: '🛸',
-    copy: {
-      nl: { title: 'Buitenaards Niveau', description: 'Je hebt 10.000 joints vermeden!' },
-      en: { title: 'Out-of-This-World Level', description: 'You avoided 10,000 joints!' },
-      es: { title: 'Nivel Extraterrestre', description: '¡Has evitado 10.000 porros!' },
-      fr: { title: 'Niveau Extraterrestre', description: 'Vous avez évité 10 000 joints !' },
-      de: { title: 'Außerirdisches Niveau', description: 'Du hast 10.000 Joints vermieden!' },
-    },
-  },
-  {
-    id: 'grams_5000',
-    type: 'grams',
-    requirement: 5000,
-    icon: '💪',
-    copy: {
-      nl: { title: 'Onstuitbaar', description: 'Je hebt 5 kilo vermeden!' },
-      en: { title: 'Unstoppable', description: 'You avoided 5 kilos!' },
-      es: { title: 'Imparable', description: '¡Has evitado 5 kilos!' },
-      fr: { title: 'Inarrêtable', description: 'Vous avez évité 5 kilos !' },
-      de: { title: 'Unaufhaltsam', description: 'Du hast 5 Kilo vermieden!' },
-    },
-  },
-  {
-    id: 'grams_7500',
-    type: 'grams',
-    requirement: 7500,
-    icon: '⭐',
-    copy: {
-      nl: { title: 'Sterrenstatus', description: 'Je hebt 7.5 kilo vermeden!' },
-      en: { title: 'Star Status', description: 'You avoided 7.5 kilos!' },
-      es: { title: 'Estatus Estrella', description: '¡Has evitado 7.5 kilos!' },
-      fr: { title: 'Statut d’Étoile', description: 'Vous avez évité 7,5 kilos !' },
-      de: { title: 'Sternenstatus', description: 'Du hast 7,5 Kilo vermieden!' },
-    },
-  },
-  {
-    id: 'grams_10000',
-    type: 'grams',
-    requirement: 10000,
-    icon: '🐐',
-    copy: {
-      nl: { title: 'Je hebt het uitgespeeld!', description: 'Je hebt 10 kilo vermeden!' },
-      en: { title: 'You Beat the Game!', description: 'You avoided 10 kilos!' },
-      es: { title: '¡Te Lo Has Pasado!', description: '¡Has evitado 10 kilos!' },
-      fr: { title: 'Tu as Fini le Jeu !', description: 'Vous avez évité 10 kilos !' },
-      de: { title: 'Du Hast Es Durchgespielt!', description: 'Du hast 10 Kilo vermieden!' },
-    },
-  },
-];
+﻿const normalizeDeep = (value) => value;
 
-function withAmount(text, amount) {
-  return text.replace('{amount}', amount);
+const achievementBlueprints = {
+  days: {
+    requirements: [1, 3, 5, 10, 15, 21, 30, 45, 75, 120, 200, 350, 500, 1000],
+    icons: ['1ï¸âƒ£', 'ðŸ•“', 'ðŸŒ¤ï¸', 'ðŸ§±', 'ðŸ—“ï¸', 'ðŸŒ…', 'ðŸŒŠ', 'ðŸ§ ', 'ðŸŒ¿', 'âœ¨', 'ðŸ', 'ðŸ§­', 'ðŸ”ï¸', 'ðŸŒŒ'],
+    titles: {
+      nl: [
+        'Je bent begonnen',
+        'Niet teruggedraaid',
+        'De vaart zit erin',
+        'Stevig bezig',
+        'Dit begint echt te worden',
+        'Je laat niet los',
+        'Je staat nog steeds',
+        'Rust in de tent',
+        'Je hoofd komt mee',
+        'Dit draag je nu',
+        'Je nieuwe normaal',
+        'Je hebt jezelf bewezen',
+        'Ver voorbij het begin',
+        'Bijna onvoorstelbaar',
+      ],
+      en: [
+        'You started',
+        'Still in it',
+        'You found momentum',
+        'Holding strong',
+        'This is getting real',
+        'You are not letting go',
+        'Still standing',
+        'A calmer rhythm',
+        'Your mind is catching up',
+        'You carry this now',
+        'A new normal',
+        'You proved it',
+        'Far beyond the start',
+        'Almost unreal',
+      ],
+      es: [
+        'Ya empezaste',
+        'Sigues en ello',
+        'Ya tienes impulso',
+        'Te mantienes firme',
+        'Esto ya va en serio',
+        'No lo estÃ¡s soltando',
+        'Sigues de pie',
+        'Un ritmo mÃ¡s tranquilo',
+        'Tu cabeza acompaÃ±a',
+        'Esto ya lo llevas contigo',
+        'Un nuevo normal',
+        'Te lo has demostrado',
+        'Muy lejos del inicio',
+        'Casi increÃ­ble',
+      ],
+      fr: [
+        'Tu as commencÃ©',
+        'Tu tiens',
+        'Tu as trouvÃ© ton Ã©lan',
+        'Tu tiens bon',
+        'LÃ , Ã§a devient rÃ©el',
+        'Tu ne lÃ¢ches pas',
+        'Toujours debout',
+        'Un rythme plus calme',
+        'Ton esprit suit',
+        'Tu portes Ã§a maintenant',
+        'Un nouveau normal',
+        'Tu te lâ€™es prouvÃ©',
+        'Bien au-delÃ  du dÃ©but',
+        'Presque irrÃ©el',
+      ],
+      de: [
+        'Du hast angefangen',
+        'Du bleibst dran',
+        'Du hast Schwung',
+        'Du hÃ¤ltst stark durch',
+        'Jetzt wird es echt',
+        'Du lÃ¤sst nicht los',
+        'Du stehst noch',
+        'Ein ruhigerer Rhythmus',
+        'Dein Kopf zieht nach',
+        'Das trÃ¤gst du jetzt',
+        'Ein neues Normal',
+        'Du hast es dir bewiesen',
+        'Weit Ã¼ber den Anfang hinaus',
+        'Kaum zu glauben',
+      ],
+    },
+  },
+  joints: {
+    requirements: [1, 4, 8, 15, 25, 40, 60, 90, 125, 175, 250, 400, 700, 1200, 3000, 6000],
+    icons: [
+      'ðŸš­',
+      'âœ‹',
+      'ðŸ”',
+      'ðŸŽ¯',
+      'ðŸ’ª',
+      'ðŸ›¡ï¸',
+      'ðŸ§­',
+      'ðŸŒ„',
+      'âš¡',
+      'ðŸ”ï¸',
+      'ðŸš€',
+      'ðŸŒŒ',
+      'ðŸŒ ',
+      'ðŸª',
+      'ðŸ‘‘',
+      'ðŸŒŸ',
+    ],
+    titles: {
+      nl: [
+        'Eerste nee',
+        'Jij boven gewoonte',
+        'Je kiest opnieuw',
+        'Het patroon kraakt',
+        'Dat tikt aan',
+        'Je staat steviger',
+        'De oude trek verliest',
+        'Ver buiten routine',
+        'Dit zit diep',
+        'Dit ligt achter je',
+        'Ongelooflijk eigenlijk',
+        'Bijna niet meer van vroeger',
+        'Je oude ritme vervaagt',
+        'Een heel ander leven',
+        'Dit heb je echt achter je gelaten',
+        'Vrijwel niet meer wie je was',
+      ],
+      en: [
+        'First no',
+        'You over habit',
+        'You choose again',
+        'The pattern is cracking',
+        'It is adding up',
+        'You stand stronger',
+        'The old pull is losing',
+        'Well past routine',
+        'This runs deep',
+        'This is behind you now',
+        'Kind of incredible',
+        'That old life feels far away',
+        'Your old rhythm is fading',
+        'A very different life',
+        'You really left this behind',
+        'Almost not who you used to be',
+      ],
+      es: [
+        'Primer no',
+        'TÃº por encima del hÃ¡bito',
+        'Vuelves a elegirte',
+        'El patrÃ³n se estÃ¡ rompiendo',
+        'Esto ya suma',
+        'Te ves mÃ¡s firme',
+        'El viejo tirÃ³n pierde fuerza',
+        'Muy por fuera de la rutina',
+        'Esto ya va muy hondo',
+        'Esto va quedando atrÃ¡s',
+        'La verdad, increÃ­ble',
+        'Tu vida de antes ya se ve lejos',
+        'Tu viejo ritmo se va borrando',
+        'Una vida muy distinta',
+        'De verdad lo dejaste atrÃ¡s',
+        'Casi ya no eres quien eras antes',
+      ],
+      fr: [
+        'Premier non',
+        'Toi avant lâ€™habitude',
+        'Tu te choisis encore',
+        'Le schÃ©ma se fissure',
+        'Ã‡a commence Ã  compter',
+        'Tu tiens plus fort',
+        'Lâ€™ancienne envie perd du terrain',
+        'Bien au-delÃ  de la routine',
+        'Ã‡a va dÃ©jÃ  trÃ¨s loin',
+        'Ã‡a reste derriÃ¨re toi',
+        'Franchement impressionnant',
+        'Ton ancienne vie paraÃ®t loin',
+        'Ton ancien rythme sâ€™efface',
+        'Une vie trÃ¨s diffÃ©rente',
+        'Tu as vraiment laissÃ© Ã§a derriÃ¨re toi',
+        'Tu nâ€™es presque plus la personne dâ€™avant',
+      ],
+      de: [
+        'Erstes Nein',
+        'Du vor der Gewohnheit',
+        'Du wÃ¤hlst dich wieder',
+        'Das Muster bricht auf',
+        'Das summiert sich',
+        'Du stehst fester',
+        'Der alte Zug verliert an Kraft',
+        'Weit Ã¼ber die Routine hinaus',
+        'Das geht schon tief',
+        'Das liegt jetzt hinter dir',
+        'Eigentlich unglaublich',
+        'Das alte Leben fÃ¼hlt sich weit weg an',
+        'Der alte Rhythmus verblasst',
+        'Ein ganz anderes Leben',
+        'Das hast du wirklich hinter dir gelassen',
+        'Fast nicht mehr die Person von frÃ¼her',
+      ],
+    },
+  },
+  grams: {
+    requirements: [1, 3, 5, 10, 20, 35, 50, 75, 100, 150, 250, 400, 700, 1200, 2000, 3000],
+    icons: [
+      'ðŸŒ±',
+      'ðŸŒ¿',
+      'ðŸƒ',
+      'ðŸ“¦',
+      'âš–ï¸',
+      'ðŸ§®',
+      'ðŸŒ¾',
+      'ðŸŽ’',
+      'ðŸª¨',
+      'ðŸ§±',
+      'ðŸŒ„',
+      'ðŸŒ',
+      'ðŸª',
+      'ðŸŒ ',
+      'ðŸ”ï¸',
+      'âœ¨',
+    ],
+    titles: {
+      nl: [
+        'De eerste is weg',
+        'Het begint te tellen',
+        'Meer dan een begin',
+        'Dat wordt serieus',
+        'Je voelt het verschil',
+        'Je laat echt iets liggen',
+        'Dat is geen kleinigheid meer',
+        'Het stapelt serieus op',
+        'Je laat echt veel liggen',
+        'Dat weegt inmiddels',
+        'Ver voorbij vroeger',
+        'Dit is echt groot geworden',
+        'Bijna niet te bevatten',
+        'Het krijgt echt omvang',
+        'Verder dan je ooit dacht',
+        'Dit is een enorme stapel',
+      ],
+      en: [
+        'The first one is gone',
+        'It starts to count',
+        'Past the first push',
+        'Now we are talking',
+        'You can feel the difference',
+        'You are really leaving it behind',
+        'That is no small amount',
+        'This is adding up for real',
+        'You have left a lot behind',
+        'It carries weight now',
+        'Well beyond the old days',
+        'This has become something big',
+        'Hard to even picture',
+        'This is getting real scale',
+        'Further than you imagined',
+        'This is a massive total',
+      ],
+      es: [
+        'El primero ya quedÃ³ atrÃ¡s',
+        'Empieza a contar',
+        'Ya pasaste el arranque',
+        'Esto ya va en serio',
+        'Ya se nota la diferencia',
+        'De verdad lo estÃ¡s dejando atrÃ¡s',
+        'Eso ya no es poca cosa',
+        'Esto ya se acumula de verdad',
+        'Has dejado mucho atrÃ¡s',
+        'Esto ya pesa de verdad',
+        'Muy lejos de tus dÃ­as de antes',
+        'Esto ya se volviÃ³ enorme',
+        'Cuesta hasta imaginarlo',
+        'Esto ya tiene mucha dimensiÃ³n',
+        'MÃ¡s lejos de lo que imaginabas',
+        'Esto ya es una enormidad',
+      ],
+      fr: [
+        'Le premier est derriÃ¨re toi',
+        'Ã‡a commence Ã  compter',
+        'Tu as passÃ© le premier Ã©lan',
+        'LÃ , Ã§a devient sÃ©rieux',
+        'La diffÃ©rence se sent',
+        'Tu le laisses vraiment derriÃ¨re toi',
+        'Ce nâ€™est plus rien du tout',
+        'LÃ , Ã§a sâ€™accumule vraiment',
+        'Tu as dÃ©jÃ  laissÃ© beaucoup derriÃ¨re toi',
+        'Ã‡a commence vraiment Ã  peser',
+        'Bien au-delÃ  de ton ancienne routine',
+        'Ã‡a a vraiment pris de lâ€™ampleur',
+        'Câ€™est presque difficile Ã  imaginer',
+        'LÃ , Ã§a prend vraiment de la place',
+        'Bien plus loin que tu lâ€™imaginais',
+        'Câ€™est devenu une somme Ã©norme',
+      ],
+      de: [
+        'Das erste ist geschafft',
+        'Es beginnt zu zÃ¤hlen',
+        'Du bist Ã¼ber den ersten Schub hinaus',
+        'Jetzt wird es ernst',
+        'Du merkst den Unterschied',
+        'Du lÃ¤sst es wirklich hinter dir',
+        'Das ist nicht mehr wenig',
+        'Das summiert sich jetzt deutlich',
+        'Du hast schon viel hinter dir gelassen',
+        'Das hat inzwischen Gewicht',
+        'Weit weg von der alten Zeit',
+        'Das ist inzwischen wirklich groÃŸ',
+        'Kaum noch vorstellbar',
+        'Das nimmt jetzt richtig AusmaÃŸ an',
+        'Weiter als du je gedacht hast',
+        'Das ist inzwischen eine enorme Menge',
+      ],
+    },
+  },
+  money: {
+    requirements: [
+      5, 12, 25, 45, 80, 150, 275, 450, 700, 1000, 1500, 2500, 4000, 6500, 10000, 20000,
+    ],
+    icons: [
+      'â˜•',
+      'ðŸ’µ',
+      'ðŸ’¸',
+      'ðŸ§¾',
+      'ðŸ¦',
+      'ðŸª™',
+      'ðŸ’°',
+      'ðŸ“ˆ',
+      'ðŸ—ï¸',
+      'ðŸš€',
+      'ðŸŒŸ',
+      'ðŸ’Ž',
+      'ðŸ›ï¸',
+      'ðŸ‘‘',
+      'âœ¨',
+      'ðŸŒ ',
+    ],
+    titles: {
+      nl: [
+        'Eerste geld terug',
+        'Houden zo',
+        'Dit voelt al anders',
+        'Mooi meegenomen',
+        'Je merkt het echt',
+        'Dat blijft bij jou',
+        'Dit begint ergens op te lijken',
+        'Dit staat stevig',
+        'Dat is serieus geld',
+        'Sterk teruggepakt',
+        'Dit verandert echt iets',
+        'Het begint groot te worden',
+        'Dat loopt echt op',
+        'Dit is serieus opgebouwd',
+        'Een enorme winst',
+        'Dat is een gigantische stap',
+      ],
+      en: [
+        'First money back',
+        'Keep it going',
+        'This already feels different',
+        'Nice to keep',
+        'You can really feel it now',
+        'That stays with you',
+        'Now it looks real',
+        'This stands on its own',
+        'That is serious money',
+        'A serious reclaim',
+        'This changes things',
+        'This is getting big',
+        'It is really adding up',
+        'This has been built for real',
+        'A huge win',
+        'That is a massive leap',
+      ],
+      es: [
+        'Primer dinero de vuelta',
+        'Sigue asÃ­',
+        'Esto ya se siente distinto',
+        'Nada mal',
+        'Ahora sÃ­ se siente de verdad',
+        'Eso se queda contigo',
+        'Ahora ya se nota de verdad',
+        'Esto ya se sostiene solo',
+        'Eso ya es dinero de verdad',
+        'Una gran recuperaciÃ³n',
+        'Esto sÃ­ cambia las cosas',
+        'Esto ya se estÃ¡ haciendo grande',
+        'De verdad se estÃ¡ acumulando',
+        'Esto ya estÃ¡ muy bien construido',
+        'Una ganancia enorme',
+        'Eso ya es un salto gigante',
+      ],
+      fr: [
+        'Premier argent rÃ©cupÃ©rÃ©',
+        'Continue comme Ã§a',
+        'Ã‡a commence Ã  changer',
+        'Toujours bon Ã  prendre',
+        'LÃ , tu le sens vraiment',
+        'Ã‡a reste pour toi',
+        'LÃ , Ã§a devient concret',
+        'Ã‡a tient vraiment debout',
+        'LÃ , câ€™est une vraie somme',
+        'Une vraie reprise',
+        'Ã‡a change vraiment quelque chose',
+        'LÃ , Ã§a devient grand',
+        'Ã‡a sâ€™accumule vraiment',
+        'Câ€™est quelque chose de solidement construit',
+        'Une Ã©norme victoire',
+        'Câ€™est un cap immense',
+      ],
+      de: [
+        'Erstes Geld zurÃ¼ck',
+        'Weiter so',
+        'Das fÃ¼hlt sich schon anders an',
+        'Kann sich sehen lassen',
+        'Jetzt merkst du es wirklich',
+        'Das bleibt bei dir',
+        'Jetzt wird es greifbar',
+        'Das steht inzwischen fÃ¼r sich',
+        'Das ist richtig Geld',
+        'Stark zurÃ¼ckgeholt',
+        'Das verÃ¤ndert wirklich etwas',
+        'Das wird jetzt richtig groÃŸ',
+        'Das summiert sich wirklich',
+        'Das ist jetzt solide aufgebaut',
+        'Ein riesiger Gewinn',
+        'Das ist ein gewaltiger Sprung',
+      ],
+    },
+  },
+};
+
+const localeMap = {
+  nl: 'nl-NL',
+  en: 'en-US',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE',
+};
+
+function buildAchievements() {
+  return Object.entries(achievementBlueprints).flatMap(([type, config]) =>
+    config.requirements.map((requirement, index) => ({
+      type,
+      requirement,
+      icon: config.icons[index],
+      title: Object.fromEntries(
+        Object.entries(config.titles).map(([language, titles]) => [language, titles[index]]),
+      ),
+    })),
+  );
+}
+
+const achievements = buildAchievements();
+
+function formatCount(language, value) {
+  return new Intl.NumberFormat(localeMap[language] || localeMap.en).format(value);
+}
+
+function formatMoneyAmount(language, value, formatWholeCurrency) {
+  if (typeof formatWholeCurrency === 'function') {
+    return formatWholeCurrency(value);
+  }
+
+  return new Intl.NumberFormat(localeMap[language] || localeMap.en, {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatWeightAmount(language, value) {
+  const formatter = new Intl.NumberFormat(localeMap[language] || localeMap.en, {
+    maximumFractionDigits: value >= 1000 ? 1 : 0,
+  });
+
+  if (value >= 1000) {
+    const kilos = value / 1000;
+
+    switch (language) {
+      case 'nl':
+        return `${formatter.format(kilos)} kilo`;
+      case 'es':
+      case 'fr':
+        return `${formatter.format(kilos)} kilos`;
+      case 'de':
+        return `${formatter.format(kilos)} Kilo`;
+      default:
+        return `${formatter.format(kilos)} kilos`;
+    }
+  }
+
+  switch (language) {
+    case 'nl':
+      return `${formatter.format(value)} gram`;
+    case 'es':
+      return `${formatter.format(value)} gramos`;
+    case 'fr':
+      return `${formatter.format(value)} grammes`;
+    case 'de':
+      return `${formatter.format(value)} Gramm`;
+    default:
+      return `${formatter.format(value)} grams`;
+  }
+}
+
+function getDescription(language, type, requirement, formatWholeCurrency) {
+  const count = formatCount(language, requirement);
+  const weight = formatWeightAmount(language, requirement);
+  const money = formatMoneyAmount(language, requirement, formatWholeCurrency);
+
+  switch (language) {
+    case 'nl':
+      if (type === 'days') return `Je bent ${count} dag${requirement === 1 ? '' : 'en'} THC-vrij!`;
+      if (type === 'joints')
+        return `Je hebt ${count} joint${requirement === 1 ? '' : 's'} vermeden!`;
+      if (type === 'grams') return `Je hebt ${weight} vermeden!`;
+      return `Je hebt ${money} bespaard!`;
+    case 'es':
+      if (type === 'days') return `Llevas ${count} dÃ­a${requirement === 1 ? '' : 's'} sin THC!`;
+      if (type === 'joints') return `Has evitado ${count} porro${requirement === 1 ? '' : 's'}!`;
+      if (type === 'grams') return `Has evitado ${weight}!`;
+      return `Has ahorrado ${money}!`;
+    case 'fr':
+      if (type === 'days')
+        return `Tu es sans THC depuis ${count} jour${requirement === 1 ? '' : 's'} !`;
+      if (type === 'joints') return `Tu as Ã©vitÃ© ${count} joint${requirement === 1 ? '' : 's'} !`;
+      if (type === 'grams') return `Tu as Ã©vitÃ© ${weight} !`;
+      return `Tu as Ã©conomisÃ© ${money} !`;
+    case 'de':
+      if (type === 'days')
+        return `Du bist seit ${count} Tag${requirement === 1 ? '' : 'en'} THC-frei!`;
+      if (type === 'joints')
+        return `Du hast ${count} Joint${requirement === 1 ? '' : 's'} vermieden!`;
+      if (type === 'grams') return `Du hast ${weight} vermieden!`;
+      return `Du hast ${money} gespart!`;
+    default:
+      if (type === 'days')
+        return `You have been THC-free for ${count} day${requirement === 1 ? '' : 's'}!`;
+      if (type === 'joints') return `You avoided ${count} joint${requirement === 1 ? '' : 's'}!`;
+      if (type === 'grams') return `You avoided ${weight}!`;
+      return `You saved ${money}!`;
+  }
 }
 
 export function getAchievementDefinitions(language, formatWholeCurrency) {
-  return achievements.map((achievement) => {
-    const copy = achievement.copy[language] || achievement.copy.en;
-
-    return {
-      id: achievement.id,
+  return normalizeDeep(
+    achievements.map((achievement) => ({
+      id: `${achievement.type}_${achievement.requirement}`,
       type: achievement.type,
       requirement: achievement.requirement,
       icon: achievement.icon,
-      title: copy.title,
-      description:
-        achievement.type === 'money'
-          ? withAmount(copy.description, formatWholeCurrency(achievement.requirement))
-          : copy.description,
-    };
-  });
+      title: achievement.title[language] || achievement.title.en,
+      description: getDescription(
+        language,
+        achievement.type,
+        achievement.requirement,
+        formatWholeCurrency,
+      ),
+    })),
+  );
 }

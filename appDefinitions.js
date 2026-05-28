@@ -15,66 +15,6 @@ const LOCALE_BY_LANGUAGE = {
   de: 'de-DE',
 };
 
-const THCSTOP_ACHIEVEMENTS = [
-  ['money_1', 'money', 1],
-  ['money_10', 'money', 10],
-  ['grams_1', 'grams', 1],
-  ['days_1', 'days', 1],
-  ['joints_5', 'joints', 5],
-  ['money_25', 'money', 25],
-  ['days_2', 'days', 2],
-  ['money_50', 'money', 50],
-  ['days_5', 'days', 5],
-  ['money_100', 'money', 100],
-  ['joints_25', 'joints', 25],
-  ['grams_10', 'grams', 10],
-  ['days_7', 'days', 7],
-  ['days_10', 'days', 10],
-  ['joints_50', 'joints', 50],
-  ['money_250', 'money', 250],
-  ['days_14', 'days', 14],
-  ['joints_100', 'joints', 100],
-  ['days_21', 'days', 21],
-  ['money_500', 'money', 500],
-  ['grams_50', 'grams', 50],
-  ['days_30', 'days', 30],
-  ['joints_250', 'joints', 250],
-  ['days_42', 'days', 42],
-  ['money_1000', 'money', 1000],
-  ['grams_100', 'grams', 100],
-  ['joints_300', 'joints', 300],
-  ['days_60', 'days', 60],
-  ['joints_400', 'joints', 400],
-  ['days_90', 'days', 90],
-  ['days_100', 'days', 100],
-  ['joints_500', 'joints', 500],
-  ['money_2500', 'money', 2500],
-  ['grams_250', 'grams', 250],
-  ['days_150', 'days', 150],
-  ['days_180', 'days', 180],
-  ['joints_1000', 'joints', 1000],
-  ['days_250', 'days', 250],
-  ['money_5000', 'money', 5000],
-  ['grams_500', 'grams', 500],
-  ['days_270', 'days', 270],
-  ['days_365', 'days', 365],
-  ['joints_2000', 'joints', 2000],
-  ['days_500', 'days', 500],
-  ['money_10000', 'money', 10000],
-  ['grams_1000', 'grams', 1000],
-  ['days_730', 'days', 730],
-  ['days_1000', 'days', 1000],
-  ['joints_5000', 'joints', 5000],
-  ['days_1095', 'days', 1095],
-  ['money_25000', 'money', 25000],
-  ['grams_2500', 'grams', 2500],
-  ['days_1825', 'days', 1825],
-  ['joints_10000', 'joints', 10000],
-  ['grams_5000', 'grams', 5000],
-  ['grams_7500', 'grams', 7500],
-  ['grams_10000', 'grams', 10000],
-];
-
 const ALCOHOLSTOP_ACHIEVEMENTS = [
   ['saved_1', 'money', 1],
   ['saved_10', 'money', 10],
@@ -181,6 +121,14 @@ const achievementCopyCache = new Map();
 function toAchievements(records) {
   return records.map(([id, type, requirement]) => ({ id, type, requirement }));
 }
+
+const THCSTOP_ACHIEVEMENTS = getThcstopAchievementDefinitions(DEFAULT_LANGUAGE, (amount) =>
+  String(amount),
+).map(({ id, type, requirement }) => ({
+  id,
+  type,
+  requirement,
+}));
 
 function getElapsedDays(quitDateTime, now = new Date()) {
   const quitDate = new Date(quitDateTime);
@@ -349,7 +297,7 @@ export const APP_DEFINITIONS = {
     appId: 'thcstop',
     displayName: 'THC STOP',
     routePage: 'Achievements',
-    achievements: toAchievements(THCSTOP_ACHIEVEMENTS),
+    achievements: THCSTOP_ACHIEVEMENTS,
     getStats(profile, now = new Date()) {
       const totalDays = getElapsedDays(profile.quit_date_time, now);
       const jointsPerDay = Number(profile.joints_per_day) || 0;
